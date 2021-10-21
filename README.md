@@ -40,6 +40,11 @@ That's why I create this project, also for fun. haha
 This project is under active development, free to use (Apache 2.0)
 I am happy to see anyone can contribute for more advancement on features
 
+# Install
+```shell
+pip install pyemits
+```
+
 # Features highlight
 
 1. Easy training
