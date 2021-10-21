@@ -302,3 +302,4 @@ class LGBMFitConfig(ConfigBase):
 class KerasSequentialConfig(ConfigBase):
     layer: List[Any]
     compile: Dict[str, Any]
+
