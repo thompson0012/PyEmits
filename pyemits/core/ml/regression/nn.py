@@ -1,3 +1,7 @@
+from keras import Sequential
+from keras.layers import Dense, Activation, Dropout, LSTM
+
+
 class WrapperBase:
     def __init__(self, nn_model_obj, nickname=None):
         self._nn_model_obj = nn_model_obj
@@ -21,7 +25,7 @@ class WrapperBase:
 
 
 class KerasWrapper(WrapperBase):
-    def __init__(self, keras_model_obj, nickname=None):
+    def __init__(self, keras_model_obj=Sequential(), nickname=None):
         super(KerasWrapper, self).__init__(keras_model_obj, nickname)
 
     @classmethod
@@ -42,8 +46,7 @@ class KerasWrapper(WrapperBase):
         if your rnn model have loss: nan, which mean you have inf,-inf, nan value which makes the explosion gradient
 
         """
-        from keras import Sequential
-        from keras.layers import Dense, Activation, Dropout, LSTM
+
         model = Sequential()
         model.add(LSTM(128,
                        activation='softmax',
