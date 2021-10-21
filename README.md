@@ -6,6 +6,40 @@ PyEmits, a python package for easy manipulation in time-series data. Time-series
 - FSI industry (Financial Services Industry)
 - FMCG (Fast Moving Consumer Good)
 
+Data scientist's work consists of:
+- forecasting
+- prediction/simulation
+- data prepration
+- cleansing
+- anomaly detection
+- descriptive data analysis/exploratory data analysis 
+
+each new business unit shall build the following wheels again and again
+1. data pipeline
+   1. extraction
+   2. transformation
+      1. cleansing
+      2. feature engineering
+      3. remove outliers
+      4. AI landing for prediction, forecasting
+   3. write it back to database
+2. ml framework
+   1. multiple model training
+   2. multiple model prediction
+   3. kfold validation
+   4. anomaly detection
+   5. forecasting
+   6. deep learning model in easy way
+   7. ensemble modelling
+3. exploratory data analysis
+   1. descriptive data analysis
+   2. ...
+
+That's why I create this project, also for fun. haha
+
+This project is under active development, free to use (Apache 2.0)
+I am happy to see anyone can contribute for more advancement on features
+
 # Features highlight
 
 1. Easy training
