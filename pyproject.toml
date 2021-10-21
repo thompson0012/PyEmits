@@ -4,6 +4,9 @@ version = "0.1.0"
 description = "python package for easy manipulation on time series data for quick insight"
 authors = ["thompson0012 <51963680+thompson0012@users.noreply.github.com>"]
 license = "Apache License 2.0"
+readme = "README.md"
+homepage = "https://github.com/thompson0012/PyEmits"
+repository = "https://github.com/thompson0012/PyEmits"
 
 [tool.poetry.dependencies]
 python = ">=3.8.3, <3.10"
