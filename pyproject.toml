@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "pyemits"
+version = "0.1.0"
+description = "python package for easy manipulation on time series data for quick insight"
+authors = ["thompson0012 <51963680+thompson0012@users.noreply.github.com>"]
+license = "Apache License 2.0"
+
+[tool.poetry.dependencies]
+python = ">=3.8.3, <3.10"
+joblib = "^1.1.0"
+scikit-learn = "^1.0"
+pyod = "^0.9.4"
+statsmodels = "^0.13.0"
+arrow = "^1.2.0"
+xgboost = "^1.5.0"
+combo = "^0.1.2"
+jax = "^0.2.24"
+jaxlib = "^0.1.73"
+suod = "^0.0.8"
+pytorch-lightning = "^1.4.9"
+lightgbm = "^3.3.0"
+pydantic = "^1.8.2"
+pyarrow = "^5.0.0"
+modin = "^0.11.1"
+ray = "^1.7.0"
+dask = "^2021.9.1"
+keras = "^2.6.0"
+tensorflow = "^2.6.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+icecream = "^2.1.1"
+PySnooper = "^1.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
