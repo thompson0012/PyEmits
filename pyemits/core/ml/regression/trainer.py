@@ -107,14 +107,18 @@ class RegTrainer(TrainerBase):
                             clf_or_wrapper,
                             X,
                             y,
-                            fit_config: Optional[ConfigBase] = None,
+                            fit_config: Optional[Union[ConfigBase, Dict]] = None,
                             ):
         # nn wrapper
         if isinstance(clf_or_wrapper, WrapperBase):
             if fit_config is None:
                 return clf_or_wrapper.nn_model_obj.fit(X, y)
 
-            return clf_or_wrapper.nn_model_obj.fit(X, y, **dict(fit_config))
+            if isinstance(fit_config, ConfigBase):
+                return clf_or_wrapper.nn_model_obj.fit(X, y, **dict(fit_config))
+
+            elif isinstance(fit_config, Dict):
+                return clf_or_wrapper.nn_model_obj.fit(X, y, **fit_config)
 
         # sklearn/xgboost/lightgbm clf
         else:
