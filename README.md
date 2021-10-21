@@ -225,14 +225,30 @@ predictor.predict(RegressionDataModel(X))
 ```
 7. Forecast at scale
    - see examples: [forecast at scale.ipynb](./examples/forecast%20at%20scale.ipynb)
-8. Anomaly detection (under development)
+8. Data Model
+```python
+from pyemits.common.data_model import RegressionDataModel
+import numpy as np
+X = np.random.randint(1, 100, size=(1000,10,10))
+y = np.random.randint(1, 100, size=(1000, 1))
+
+data_model = RegressionDataModel(X, y)
+
+data_model._update_variable('X_shape', (1000,10,10))
+data_model.X_shape
+
+data_model.add_meta_data('X_shape', (1000,10,10))
+data_model.meta_data
+
+```
+9. Anomaly detection (under development)
    - see module: [anomaly detection](./pyemits/core/ml/anomaly_detection)
    - Kalman filter
-9. Evaluation (under development)
-   - see module: [evaluation](./pyemits/evaluation)
-   - backtesting
-   - model evaluation
-10. Ensemble (under development) 
+10. Evaluation (under development)
+    - see module: [evaluation](./pyemits/evaluation)
+    - backtesting
+    - model evaluation
+11. Ensemble (under development) 
     - blending
     - stacking
     - voting
@@ -242,16 +258,16 @@ predictor.predict(RegressionDataModel(X))
       - average
       - median
       - maximization
-11. IO 
+12. IO 
     - db connection
     - local
-12. dashboard ???
-13. other miscellaneous feature
+13. dashboard ???
+14. other miscellaneous feature
     - continuous evaluation
     - aggregation
     - dimensional reduction
     - data profile (intensive data overview)
-14. to be confirmed
+15. to be confirmed
 
 # References
 the following libraries gave me some idea/insight
