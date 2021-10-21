@@ -17,28 +17,32 @@ class BaseDataModel(ABC):
         self._meta_data.update(kv)
         return
 
-    def add_meta_data(self, k: str, v: Union[list, float, int, str]):
+    def add_meta_data(self, k: str, v: Union[list, float, int, str, tuple]):
         raise_if_incorrect_type(k, str)
-        raise_if_incorrect_type(k, (list, float, int, str))
+        raise_if_incorrect_type(k, (list, float, int, str, tuple))
 
-        kv = self.meta_data.get(k, {k: v})
+        kv = self.meta_data.get(k, None)
+        if kv is None:
+            # create and instantly return
+            self.update_meta_data({k: v})
+            return
 
-        if isinstance(kv, list):
+        elif isinstance(kv, list):
+            # if passing a list, extend it
+            # you can passing [[1,2,3]] to append list
             if isinstance(v, list):
                 self._meta_data[k].extend(v)
                 return
 
+            # appending a new value
             self._meta_data[k].append(v)
             return
 
-        elif isinstance(kv, dict):
-            self.update_meta_data(kv)
-            return
-
-        elif isinstance(kv, (float, int, str)):
+        elif isinstance(kv, (float, int, str, tuple, dict)):
             raise ItemOverwriteError(
-                f"meta_data[{k}] is assigned as float/int/str, not not able to be overwrite, "
-                f"only list is allowed to add values")
+                f"meta_data[{k}] is assigned as float/int/str/tuple/tuple, not not able to be overwrite in add method, "
+                f"only list is allowed to add values"
+                f"use update method to change values")
 
         raise TypeError
 
