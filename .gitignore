@@ -2,3 +2,6 @@
 poetry.lock
 *.pyc
 *.xml
+*.whl
+*.gz
+*.iml
