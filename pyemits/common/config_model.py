@@ -314,7 +314,7 @@ class PyodAutoencoderConfig(ConfigBase):
     hidden_neurons: Optional[List] = [64, 32, 32, 64]
     hidden_activation: Optional[str] = 'relu'
     output_activation: Optional[str] = 'sigmoid'
-    loss: Optional[Union[str, object]] = 'mean_squared_error'
+    loss: Optional[Union[str, Any]] = 'mean_squared_error'
     optimizer: Optional[str] = 'adam'
     epochs: int = 100
     batch_size: int = 32
@@ -491,7 +491,7 @@ class PyodPcaConfig(ConfigBase):
     n_components: Optional[Union[int, float, str]] = None
     n_selected_components: Optional[int] = None
     contamination: float = 0.1
-    copy: bool = True
+    # copy: bool = True # Pydantic attribute, not able to use this variables
     whiten: bool = False
     svd_solver: Literal['auto', 'full', 'arpack', 'randomized'] = 'auto'
     tol: float = 0.0
