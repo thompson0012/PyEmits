@@ -1,7 +1,7 @@
 from pyemits.common.config_model import ConfigBase
 from pyemits.common.validation import check_all_type_uniform
 from pyemits.common.py_native_dtype import SliceableDeque
-from pyemits.common.data_model import BaseDataModel
+from pyemits.common.data_model import MetaDataModel
 from typing import List
 from abc import abstractmethod, ABC
 import joblib
@@ -14,9 +14,17 @@ class TrainerBase(ABC):
                  ):
         self.algo = algo
         self.algo_config = algo_config
-        self.meta_data_model = BaseDataModel()
+        self.meta_data_model = MetaDataModel()
         assert len(algo) == len(
             algo_config), f"length not matched, algo*{len(algo)} and algo_config*{len(algo_config)}  "
+
+    @abstractmethod
+    def _is_algo_valid(self):
+        pass
+
+    @abstractmethod
+    def _is_algo_config_valid(self):
+        pass
 
     @abstractmethod
     def _fit(self):
@@ -50,3 +58,40 @@ def save_model(clf_models, name):
 
 def load_model(path_or_url):
     return joblib.load(path_or_url)
+
+
+class WrapperBase:
+    def __init__(self, model_obj, nickname=None):
+        self._model_obj = model_obj
+        self._nickname = nickname
+
+    @property
+    def model_obj(self):
+        return self._model_obj
+
+    def _fit(self, *args, **kwargs):
+        pass
+
+    def fit(self, *args, **kwargs):
+        pass
+
+    def _predict(self, *args, **kwargs):
+        pass
+
+    def predict(self, *args, **kwargs):
+        pass
+
+
+class NeuralNetworkWrapperBase(WrapperBase):
+    def __init__(self, nn_model_obj, nickname=None):
+        super(NeuralNetworkWrapperBase, self).__init__(nn_model_obj, nickname)
+        self._nn_model_obj = nn_model_obj
+        self._nickname = nickname
+
+    @property
+    def nn_model_obj(self):
+        """
+        equal to model obj
+
+        """
+        return self.model_obj
