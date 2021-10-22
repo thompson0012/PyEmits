@@ -303,3 +303,241 @@ class KerasSequentialConfig(ConfigBase):
     layer: List[Any]
     compile: Dict[str, Any]
 
+
+class PyodAbodConfig(ConfigBase):
+    contamination: float = 0.1
+    n_neighbors: int = 5
+    method: Literal['fast', 'default'] = 'fast'
+
+
+class PyodAutoencoderConfig(ConfigBase):
+    hidden_neurons: Optional[List] = [64, 32, 32, 64]
+    hidden_activation: Optional[str] = 'relu'
+    output_activation: Optional[str] = 'sigmoid'
+    loss: Optional[Union[str, object]] = 'mean_squared_error'
+    optimizer: Optional[str] = 'adam'
+    epochs: int = 100
+    batch_size: int = 32
+    dropout_rate: float = 0.2
+    l2_regularizer: float = 0.1
+    validation_size: float = 0.1
+    preprocessing: bool = True
+    verbose: int = 1
+    random_state: Optional[int] = None
+    contamination: float = 0.1
+
+
+class PyodAutoendcoderTorchConfig(ConfigBase):
+    hidden_neurons: Optional[List] = [64, 32]
+    hidden_activation: Optional[str] = 'relu'
+    batch_norm: Optional[bool] = True
+    learning_rate: float = 0.001
+    epochs: int = 100
+    batch_size: int = 32
+    dropout_rate: float = 0.2
+    weight_decay: float = 1e-05
+    preprocessing: bool = True
+    loss_fn: Optional[Any] = None
+    contamination: float = 0.1
+    device: Optional[Any] = None
+
+
+class PyodCblofConfig(ConfigBase):
+    n_cluster: int = 8
+    contamination: float = 0.1
+    clustering_estimator: Optional[Any] = None
+    alpha: float = 0.9
+    beta: int = 5
+    use_weights: bool = False
+    check_estimator: bool = False
+    random_state: Optional[int] = None
+    n_jobs: int = 1
+
+
+class PyodCofConfig(ConfigBase):
+    contamination: float = 0.1
+    n_neighbors: int = 20
+    method: Literal['fast', 'memory'] = 'fast'
+
+
+class PyodCombinationConfig(ConfigBase):
+    """
+    to be designed
+    """
+
+
+class PyodCopodConfig(ConfigBase):
+    contamination: float = 0.1
+    n_jobs: int = 1
+
+
+class PyodDeepSvddConfig(ConfigBase):
+    c: Optional[Union[float, str]] = None
+    use_ae: Optional[bool] = False
+    hidden_neurons: Optional[List] = [64, 32]
+    hidden_activation: Optional[str] = 'relu'
+    output_activation: Optional[str] = 'sigmoid'
+    optimizer: Optional[str] = 'adam'
+    epochs: int = 100
+    batch_size: int = 32
+    dropout_rate: float = 0.2
+    l2_regularizer: float = 0.1
+    validation_size: float = 0.1
+    preprocessing: bool = True
+    verbose: int = 1
+    random_state: Optional[int] = None
+    contamination: float = 0.1
+
+
+class PyodFeatureBaggingConfig(ConfigBase):
+    """
+    to be designed
+    """
+
+
+class PyodHbosConfig(ConfigBase):
+    n_bins: int = 10
+    alpha: float = 0.1
+    tol: float = 0.5
+    contamination: float = 0.1
+
+
+class PyodIforestConfig(ConfigBase):
+    n_estimators: int = 100
+    max_samples: Union[int, float, str] = 'auto'
+    contamination: float = 0.1
+    max_features: Union[int, float] = 1.0
+    bootstrap: bool = False
+    n_jobs: int = 1
+    behaviour: str = 'old'
+    random_state: Optional[int] = None
+    verbose: int = 0
+
+
+class PyodKnnConfig(ConfigBase):
+    contamination: float = 0.1
+    n_neighbors: int = 5
+    method: Literal['largest', 'mean', 'median'] = 'largest'
+    radius: float = 1.0
+    algorithm: Literal['auto', 'ball_tree', 'kd_tree', 'brute'] = 'auto'
+    leaf_size: int = 30
+    metric: Union[str, Callable] = 'minkowski'
+    p: int = 2
+    metric_params: Optional[Dict] = None
+    n_jobs: int = 1
+
+
+class PyodLmddConfig(ConfigBase):
+    """
+    to be filled
+    """
+
+
+class PyodLodaConfig(ConfigBase):
+    """
+    to be filled
+    """
+
+
+class PyodLofConfig(ConfigBase):
+    n_neighbors: int = 20
+    algorithm: Literal['auto', 'ball_tree', 'kd_tree', 'brute'] = 'auto'
+    leaf_size: int = 30
+    metric: Union[Callable, str] = 'minkowski'
+    p: int = 2
+    metric_params: Optional[Dict] = None
+    contamination: float = 0.1
+    n_jobs: int = 1
+    novelty: bool = True
+
+
+class PyodLociConfig(ConfigBase):
+    """
+    to be filled
+    """
+
+
+class PyodLscpConfig(ConfigBase):
+    """
+    to be filled
+    """
+
+
+class PyodMadConfig(ConfigBase):
+    """
+    to be filled
+    """
+
+
+class PyodMcdConfig(ConfigBase):
+    """
+    to be filled
+    """
+
+
+class PyodMoGaalConfig(ConfigBase):
+    """
+    to be filled
+    """
+
+
+class PyodOcsvmConfig(ConfigBase):
+    """
+    to be filled
+    """
+
+
+class PyodPcaConfig(ConfigBase):
+    n_components: Optional[Union[int, float, str]] = None
+    n_selected_components: Optional[int] = None
+    contamination: float = 0.1
+    copy: bool = True
+    whiten: bool = False
+    svd_solver: Literal['auto', 'full', 'arpack', 'randomized'] = 'auto'
+    tol: float = 0.0
+    iterated_power: Union[int, str] = 'auto'
+    random_state: Optional[int] = None
+    weighted: bool = True
+    standardization: bool = True
+
+
+class PyodRodConfig(ConfigBase):
+    """
+        to be filled
+    """
+
+
+class PyodSodConfig(ConfigBase):
+    """
+        to be filled
+    """
+
+
+class PyodSoGaalConfig(ConfigBase):
+    """
+        to be filled
+    """
+
+
+class PyodSosConfig(ConfigBase):
+    """
+        to be filled
+    """
+
+
+class PyodSuodConfig(ConfigBase):
+    """
+        to be filled
+    """
+
+
+class PyodVaeConfig(ConfigBase):
+    """
+        to be filled
+    """
+
+
+class PyodXgbodConfig(ConfigBase):
+    """
+        to be filled
+    """
