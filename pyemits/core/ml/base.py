@@ -15,8 +15,9 @@ class TrainerBase(ABC):
         self.algo = algo
         self.algo_config = algo_config
         self.meta_data_model = MetaDataModel()
+        self._make_blank_algo_config_if_None()
         assert len(algo) == len(
-            algo_config), f"length not matched, algo*{len(algo)} and algo_config*{len(algo_config)}  "
+            self.algo_config), f"length not matched, algo*{len(algo)} and algo_config*{len(self.algo_config)}  "
 
     @abstractmethod
     def _is_algo_valid(self):
@@ -25,6 +26,10 @@ class TrainerBase(ABC):
     @abstractmethod
     def _is_algo_config_valid(self):
         pass
+
+    def _make_blank_algo_config_if_None(self):
+        if self.algo_config is None:
+            self.algo_config = [None] * len(self.algo)
 
     @abstractmethod
     def _fit(self):
@@ -60,7 +65,7 @@ def load_model(path_or_url):
     return joblib.load(path_or_url)
 
 
-class WrapperBase:
+class WrapperBase(ABC):
     def __init__(self, model_obj, nickname=None):
         self._model_obj = model_obj
         self._nickname = nickname
@@ -69,17 +74,19 @@ class WrapperBase:
     def model_obj(self):
         return self._model_obj
 
+    @abstractmethod
     def _fit(self, *args, **kwargs):
         pass
 
     def fit(self, *args, **kwargs):
-        pass
+        return self._fit(*args, **kwargs)
 
+    @abstractmethod
     def _predict(self, *args, **kwargs):
         pass
 
     def predict(self, *args, **kwargs):
-        pass
+        return self._predict(*args, **kwargs)
 
 
 class NeuralNetworkWrapperBase(WrapperBase):
