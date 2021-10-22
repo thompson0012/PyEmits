@@ -68,10 +68,12 @@ class RegTrainer(TrainerBase):
             if not isinstance(item, (str, NeuralNetworkWrapperBase)):
                 raise TypeError('must be str or WrapperBase')
             if isinstance(item, str):
-                raise_if_value_not_contains(item, list(RegModelContainer.keys()))
+                raise_if_value_not_contains([item], list(RegModelContainer.keys()))
 
     def _is_algo_config_valid(self):
         for item in self.algo_config:
+            if item is None:
+                continue  # skip to next loop
             if not isinstance(item, (ConfigBase, Dict)):
                 raise TypeError('Only accept ConfigBase or Dict as input')
             # no checking when model is object, which directly passing it
