@@ -39,14 +39,8 @@ class KerasWrapper(NeuralNetworkWrapperBase):
     def _fit(self, *args, **kwargs):
         return self.model_obj.fit(*args, **kwargs)
 
-    def fit(self, *args, **kwargs):
-        return self._fit(*args, **kwargs)
-
     def _predict(self, *args, **kwargs):
         return self.model_obj.predict(*args, **kwargs)
-
-    def predict(self, *args, **kwargs):
-        return self._predict(*args, **kwargs)
 
     def __str__(self):
         return f"KerasWrapper_{self._nickname}"
