@@ -3,14 +3,13 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.linear_model import ElasticNet, Ridge, Lasso, BayesianRidge, HuberRegressor
 from xgboost import XGBRegressor
 from lightgbm import LGBMRegressor
-from pyemits.core.ml.base import TrainerBase
+from pyemits.core.ml.base import TrainerBase, WrapperBase, NeuralNetworkWrapperBase
 from pyemits.common.config_model import ConfigBase, KerasSequentialConfig
 from pyemits.common.data_model import RegressionDataModel
 from pyemits.common.py_native_dtype import SliceableDeque
 from pyemits.common.validation import raise_if_value_not_contains
 from typing import List, Dict, Optional, Union, Any
 import numpy as np
-from pyemits.core.ml.regression.nn import WrapperBase
 
 RegModelContainer = {
     'RF': RandomForestRegressor,
@@ -61,6 +60,21 @@ class RegTrainer(TrainerBase):
         self.raw_data_model = raw_data_model
         self.other_config = other_config
         self.clf_models = SliceableDeque()
+        self._is_algo_valid()
+        self._is_algo_config_valid()
+
+    def _is_algo_valid(self):
+        for item in self.algo:
+            if not isinstance(item, (str, NeuralNetworkWrapperBase)):
+                raise TypeError('must be str or WrapperBase')
+            if isinstance(item, str):
+                raise_if_value_not_contains(item, list(RegModelContainer.keys()))
+
+    def _is_algo_config_valid(self):
+        for item in self.algo_config:
+            if not isinstance(item, (ConfigBase, Dict)):
+                raise TypeError('Only accept ConfigBase or Dict as input')
+            # no checking when model is object, which directly passing it
 
     def is_config_exists(self, config_key: str):
         config_item = self.other_config.get(config_key, None)
@@ -86,15 +100,19 @@ class RegTrainer(TrainerBase):
                              clf_or_wrapper,
                              algo_config: Optional[ConfigBase] = None):
         # nn wrapper
-        if isinstance(clf_or_wrapper, WrapperBase):
+        if isinstance(clf_or_wrapper, NeuralNetworkWrapperBase):
+            # have algo config
             if algo_config is not None:
+                # if keras model object
                 if isinstance(algo_config, KerasSequentialConfig):
                     for i in algo_config.layer:
-                        clf_or_wrapper.nn_model_obj.add(i)
-                    clf_or_wrapper.nn_model_obj.compile(**algo_config.compile)
+                        clf_or_wrapper.model_obj.add(i)
+                    clf_or_wrapper.model_obj.compile(**algo_config.compile)
                     return clf_or_wrapper
+                # not support pytorch, mxnet model right now
                 raise TypeError('now only support KerasSequentialConfig')
 
+            # no algo config
             return clf_or_wrapper
 
         # sklearn clf path
@@ -110,15 +128,15 @@ class RegTrainer(TrainerBase):
                             fit_config: Optional[Union[ConfigBase, Dict]] = None,
                             ):
         # nn wrapper
-        if isinstance(clf_or_wrapper, WrapperBase):
+        if isinstance(clf_or_wrapper, NeuralNetworkWrapperBase):
             if fit_config is None:
-                return clf_or_wrapper.nn_model_obj.fit(X, y)
+                return clf_or_wrapper.fit(X, y)
 
             if isinstance(fit_config, ConfigBase):
-                return clf_or_wrapper.nn_model_obj.fit(X, y, **dict(fit_config))
+                return clf_or_wrapper.fit(X, y, **dict(fit_config))
 
             elif isinstance(fit_config, Dict):
-                return clf_or_wrapper.nn_model_obj.fit(X, y, **fit_config)
+                return clf_or_wrapper.fit(X, y, **fit_config)
 
         # sklearn/xgboost/lightgbm clf
         else:
