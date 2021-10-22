@@ -10,7 +10,7 @@ def zero_inf_nan_handler(arr, zero=1e-4, nan=1e-4, neginf=0, posinf=0):
 
 
 def df_create_time_features(df: pd.DataFrame):
-    if not (df.index.dtype != 'datetime64[ns]' or df.index.dtype != 'datetime64[ms]' or df.index.dtype != 'datetime64'):
+    if df.index.dtype not in ('datetime64[ns]', 'datetime64[ms]', 'datetime64'):
         raise TypeError('index must be datetime index')
 
     df_copy = df.copy()
@@ -25,7 +25,7 @@ def df_create_time_features(df: pd.DataFrame):
 
 def create_time_features(arr: np.ndarray, time_features='all'):
     raise_if_incorrect_type(arr, np.ndarray)
-    if not (arr.dtype != 'datetime64[ns]' or arr.dtype != 'datetime64[ms]' or arr.dtype != 'datetime64'):
+    if arr.dtype not in ('datetime64[ns]', 'datetime64[ms]', 'datetime64'):
         raise TypeError('array type only accept datetime64')
 
     year_func = lambda x: str(x)[0:4]
