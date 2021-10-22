@@ -87,14 +87,24 @@ class BaseDataModel(ABC):
         return
 
 
-class ForecastDataModel(BaseDataModel):
+class MetaDataModel(BaseDataModel):
     def __init__(self):
-        super(ForecastDataModel, self).__init__()
+        super(MetaDataModel, self).__init__()
 
 
 class AnomalyDataModel(BaseDataModel):
-    def __init__(self):
+    def __init__(self, X_data, y_data=None):
         super(AnomalyDataModel, self).__init__()
+        self._X_data = X_data
+        self._y_data = y_data  # y_data is not necessary, unless you are training with supervised anomaly detector
+
+    @property
+    def X_data(self):
+        return self._X_data
+
+    @property
+    def y_data(self):
+        return self._y_data
 
 
 class EnsembleDataModel(BaseDataModel):
