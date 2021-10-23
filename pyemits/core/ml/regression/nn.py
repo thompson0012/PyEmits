@@ -1,11 +1,17 @@
-from keras import Sequential
-from keras.layers import Dense, Dropout, LSTM
+
+
 from pyemits.core.ml.base import WrapperBase, NeuralNetworkWrapperBase
 
 
 class KerasWrapper(NeuralNetworkWrapperBase):
-    def __init__(self, keras_model_obj=Sequential(), nickname=None):
+    def __init__(self, keras_model_obj, nickname=None):
         super(KerasWrapper, self).__init__(keras_model_obj, nickname)
+
+    @classmethod
+    def from_blank_model(cls, nickname=None):
+        from keras import Sequential
+        model = Sequential()
+        return cls(model, nickname)
 
     @classmethod
     def from_simple_lstm_model(cls, train_data_shape, output_shape):
@@ -25,7 +31,8 @@ class KerasWrapper(NeuralNetworkWrapperBase):
         if your rnn model have loss: nan, which mean you have inf,-inf, nan value which makes the explosion gradient
 
         """
-
+        from keras import Sequential
+        from keras.layers import Dense, Dropout, LSTM
         model = Sequential()
         model.add(LSTM(128,
                        activation='softmax',
