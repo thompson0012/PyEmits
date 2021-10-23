@@ -47,6 +47,14 @@ pip install pyemits
 
 # Features highlight
 
+> scikit-learn API style
+> 
+> inherit the design concept of pyecharts, "everything is configurable"
+> 
+> highly flexible configuration items, can easily integrate with existing model
+> 
+> easily integrate to SaaS product for product proof of concept
+
 1. Easy training
 
 ```python
