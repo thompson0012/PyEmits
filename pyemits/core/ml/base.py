@@ -12,12 +12,24 @@ class TrainerBase(ABC):
                  algo,
                  algo_config: List[ConfigBase],
                  ):
-        self.algo = algo
-        self.algo_config = algo_config
-        self.meta_data_model = MetaDataModel()
-        self._make_blank_algo_config_if_None()
+        self._algo = algo
+        self._algo_config = algo_config
+        self._meta_data_model = MetaDataModel()
+        self._fill_blank_algo_config_if_none()
         assert len(algo) == len(
-            self.algo_config), f"length not matched, algo*{len(algo)} and algo_config*{len(self.algo_config)}  "
+            self._algo_config), f"length not matched, algo*{len(algo)} and algo_config*{len(self._algo_config)}  "
+
+    @property
+    def algo(self):
+        return self._algo
+
+    @property
+    def algo_config(self):
+        return self._algo_config
+
+    @property
+    def meta_data_model(self):
+        return self._meta_data_model
 
     @abstractmethod
     def _is_algo_valid(self):
@@ -27,9 +39,9 @@ class TrainerBase(ABC):
     def _is_algo_config_valid(self):
         pass
 
-    def _make_blank_algo_config_if_None(self):
-        if self.algo_config is None:
-            self.algo_config = [None] * len(self.algo)
+    def _fill_blank_algo_config_if_none(self):
+        if self._algo_config is None:
+            self._algo_config = [None] * len(self._algo)
 
     @abstractmethod
     def _fit(self):
