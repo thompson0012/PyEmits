@@ -88,3 +88,18 @@ def check_if_all_value_true(*args):
         return True
 
     return False
+
+
+def is_initialized_cls(obj) -> bool:
+    import inspect
+    if inspect.isclass(obj):
+        return False  # still a class
+
+    return True  # initialized
+
+
+def raise_if_not_init_cls(obj):
+    if is_initialized_cls(obj):
+        return True
+
+    raise TypeError('model must be initialized before any use')
