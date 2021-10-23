@@ -64,14 +64,14 @@ class RegTrainer(TrainerBase):
         self._is_algo_config_valid()
 
     def _is_algo_valid(self):
-        for item in self.algo:
+        for item in self._algo:
             if not isinstance(item, (str, NeuralNetworkWrapperBase)):
                 raise TypeError('must be str or WrapperBase')
             if isinstance(item, str):
                 raise_if_value_not_contains([item], list(RegModelContainer.keys()))
 
     def _is_algo_config_valid(self):
-        for item in self.algo_config:
+        for item in self._algo_config:
             if item is None:
                 continue  # skip to next loop
             if not isinstance(item, (ConfigBase, Dict)):
@@ -87,11 +87,11 @@ class RegTrainer(TrainerBase):
     def get_fill_fit_config(self):
         fit_config = self.other_config.get('fit_config', None)
         if isinstance(fit_config, list):
-            assert len(fit_config) == len(self.algo), 'length not matched'
+            assert len(fit_config) == len(self._algo), 'length not matched'
             return fit_config
         elif fit_config is None:
             fit_config_ = []  # rename variable
-            for i in range(len(self.algo)):
+            for i in range(len(self._algo)):
                 fit_config_.append(None)
             fit_config = fit_config_  # pointer,
             return fit_config
@@ -158,7 +158,7 @@ class RegTrainer(TrainerBase):
 
         fit_config = self.get_fill_fit_config()
 
-        for n, (algo, algo_config) in enumerate(zip(self.algo, self.algo_config)):
+        for n, (algo, algo_config) in enumerate(zip(self._algo, self._algo_config)):
             clf = self.fill_algo_config_clf(_get_reg_model(algo), algo_config)
             self.fill_fit_config_clf(clf, X, y, fit_config[n])
             self.clf_models.append((str(algo), clf))
@@ -202,7 +202,7 @@ class ParallelRegTrainer(RegTrainer):
         out: List[RegTrainer] = parallel(
             delayed(_get_fitted_trainer)([algo_], [algo_config_], self.raw_data_model, self.other_config) for
             algo_, algo_config_ in
-            zip(self.algo, self.algo_config))
+            zip(self._algo, self._algo_config))
 
         # self.clf_models = [obj.clf_models for obj in out]
         for obj in out:
@@ -230,7 +230,7 @@ class MultiOutputRegTrainer(RegTrainer):
         X = self.raw_data_model.X_data
         y = self.raw_data_model.y_data
 
-        for n, (algo, algo_config) in enumerate(zip(self.algo, self.algo_config)):
+        for n, (algo, algo_config) in enumerate(zip(self._algo, self._algo_config)):
             clf = self.fill_algo_config_clf(_get_reg_model(algo), algo_config)  # clf already activated
             clf = MultiOutputRegressor(estimator=clf, n_jobs=self.parallel_n_jobs)
             self.fill_fit_config_clf(clf, X, y, fit_config[n])
@@ -257,13 +257,13 @@ class KFoldCVTrainer(RegTrainer):
 
         splitted_kfold = kfold_cv.split()
         for n, item in enumerate(splitted_kfold):
-            self.meta_data_model.add_meta_data('kfold_record', [item])
+            self._meta_data_model.add_meta_data('kfold_record', [item])
             train_idx = item[0]
             test_idx = item[1]
             X_ = self.raw_data_model.X_data[train_idx]
             y_ = self.raw_data_model.y_data[train_idx]
             sliced_data_model = RegressionDataModel(X_, y_)
-            trainer = ParallelRegTrainer(self.algo, self.algo_config, sliced_data_model,
+            trainer = ParallelRegTrainer(self._algo, self._algo_config, sliced_data_model,
                                          other_config=self.other_config)
             trainer.fit()
             self.clf_models.append((f'kfold_{n}', trainer.clf_models))
