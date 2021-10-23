@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyemits"
-version = "0.1.1"
+version = "0.1.2"
 description = "python package for easy manipulation on time series data for quick insight"
 authors = ["thompson0012 <51963680+thompson0012@users.noreply.github.com>"]
 license = "Apache-2.0"
