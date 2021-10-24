@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+
+from pyemits.common.errors import ItemNotFoundError
 from pyemits.common.validation import raise_if_incorrect_type, raise_if_value_not_contains
 from pyemits.common.utils.misc_utils import slice_iterables
 
@@ -54,3 +56,50 @@ def create_time_features(arr: np.ndarray, time_features='all'):
         return container
 
     raise ValueError('only accept List[str] or "all"')
+
+
+def get_freq_time_interval(arr):
+    unique, counts = list_ts_interval_counts(arr)
+    max_idx = np.argmax(counts)
+    return unique[max_idx]
+
+
+def locate_timeindex_columns(dataframe):
+    """
+    locate the series data which is timeindex
+    only return the first values
+
+    Parameters
+    ----------
+    dataframe: pd.DataFrame
+
+    Returns
+    -------
+
+    """
+    for i in dataframe:
+        # if dataframe[i].dtype == np.dtype('datetime64[ns]'):
+        if dataframe[i].dtype in ('datetime64', 'datetime64[ms]', 'datetime64[ns]'):
+            return i
+
+    raise ItemNotFoundError('timeindex colums not found in columns: ', list(dataframe.columns))
+
+
+def list_ts_interval_counts(arr):
+    arr = np.sort(arr)
+    v_func = np.vectorize(lambda x: pd.Timedelta(x))
+    time_diff = np.diff(arr)
+    time_delta_arr = v_func(time_diff)
+    unique, counts = np.unique(time_delta_arr, return_counts=True)
+    return unique, counts
+
+
+def fix_async_freq(df: pd.DataFrame):
+    df_ = df.copy()
+    ts_idx = locate_timeindex_columns(df_)
+    df_.set_index(ts_idx, inplace=True)
+
+    arr = df_.sort_index().index.to_numpy()
+    time_delta = get_freq_time_interval(arr)
+
+    return df_.reindex(pd.date_range(arr[0], arr[-1], freq=time_delta))
