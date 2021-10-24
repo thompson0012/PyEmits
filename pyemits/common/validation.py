@@ -2,7 +2,7 @@
 function gate checker for ensure input is correct
 """
 from pyemits.common.errors import ItemNotFoundError
-from typing import Union, Any
+from typing import Union, Any, Sequence
 
 
 def raise_if_incorrect_type(obj: object, expected_type: Any):
@@ -103,3 +103,11 @@ def raise_if_not_init_cls(obj):
         return True
 
     raise TypeError('model must be initialized before any use')
+
+
+def raise_if_values_not_same(iterables: Sequence):
+    first_item = iterables[0]
+    if not all(map(lambda x: x == first_item, iterables)):
+        raise ValueError('sequences not same values')
+
+    return True
