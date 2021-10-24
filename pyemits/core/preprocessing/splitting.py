@@ -1,44 +1,8 @@
-from pyemits.common.validation import raise_if_incorrect_type, raise_if_value_not_contains
-from pyemits.common.errors import ItemNotFoundError
-from typing import Union, List
+from pyemits.common.validation import raise_if_incorrect_type
+from typing import Union
 import pandas as pd
 import numpy as np
 from pyemits.common.py_native_dtype import SliceableDeque
-
-
-def list_ts_interval_counts(arr):
-    arr = np.sort(arr)
-    v_func = np.vectorize(lambda x: pd.Timedelta(x))
-    time_diff = np.diff(arr)
-    time_delta_arr = v_func(time_diff)
-    unique, counts = np.unique(time_delta_arr, return_counts=True)
-    return unique, counts
-
-
-def get_freq_time_interval(arr):
-    unique, counts = list_ts_interval_counts(arr)
-    max_idx = np.argmax(counts)
-    return unique[max_idx]
-
-
-def locate_timeindex_columns(dataframe):
-    """
-    locate the series data which is timeindex
-    only return the first values
-
-    Parameters
-    ----------
-    dataframe: pd.DataFrame
-
-    Returns
-    -------
-
-    """
-    for i in dataframe:
-        if dataframe[i].dtype == np.dtype('datetime64[ns]'):
-            return i
-
-    raise ItemNotFoundError('timeindex colums not found in columns: ', list(dataframe.columns))
 
 
 def extract_tensor_data(arr: Union[np.ndarray, pd.DataFrame],
