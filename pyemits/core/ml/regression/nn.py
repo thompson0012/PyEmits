@@ -1,6 +1,6 @@
 
 
-from pyemits.core.ml.base import WrapperBase, NeuralNetworkWrapperBase
+from pyemits.core.ml.base import BaseWrapper, NeuralNetworkWrapperBase
 
 
 class KerasWrapper(NeuralNetworkWrapperBase):
