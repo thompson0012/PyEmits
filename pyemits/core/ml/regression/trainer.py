@@ -3,8 +3,8 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.linear_model import ElasticNet, Ridge, Lasso, BayesianRidge, HuberRegressor
 from xgboost import XGBRegressor
 from lightgbm import LGBMRegressor
-from pyemits.core.ml.base import TrainerBase, WrapperBase, NeuralNetworkWrapperBase
-from pyemits.common.config_model import ConfigBase, KerasSequentialConfig
+from pyemits.core.ml.base import BaseTrainer, BaseWrapper, NeuralNetworkWrapperBase
+from pyemits.common.config_model import BaseConfig, KerasSequentialConfig
 from pyemits.common.data_model import RegressionDataModel
 from pyemits.common.py_native_dtype import SliceableDeque
 from pyemits.common.validation import raise_if_value_not_contains
@@ -27,31 +27,31 @@ RegModelContainer = {
 }
 
 
-def _get_reg_model(algo_or_wrapper: Union[str, WrapperBase]):
+def _get_reg_model(algo_or_wrapper: Union[str, BaseWrapper]):
     if isinstance(algo_or_wrapper, str):
         return RegModelContainer[algo_or_wrapper]
     # return wrapper model
-    elif isinstance(algo_or_wrapper, WrapperBase):
+    elif isinstance(algo_or_wrapper, BaseWrapper):
         return algo_or_wrapper
 
 
-class RegTrainer(TrainerBase):
+class RegTrainer(BaseTrainer):
     def __init__(self,
                  algo: List[Union[str, Any]],
-                 algo_config: List[Optional[ConfigBase]],
+                 algo_config: List[Optional[BaseConfig]],
                  raw_data_model: RegressionDataModel,
-                 other_config: Dict[str, Union[List, ConfigBase, Any]] = {}):
+                 other_config: Dict[str, Union[List, BaseConfig, Any]] = {}):
         """
 
         Parameters
         ----------
         algo: List[str]
             the machine learning algorithm, any machine learning model that have fit/predict can used in here
-        algo_config: List[ConfigBase] or List[None]
+        algo_config: List[BaseConfig] or List[None]
             the respective config model of algo
         raw_data_model: RegressionDataModel
             data model obj, stores data and meta data
-        other_config: ConfigBase
+        other_config: BaseConfig
             other global config, shall be used in its sub-class
         """
         super(RegTrainer, self).__init__(algo, algo_config)
@@ -74,7 +74,7 @@ class RegTrainer(TrainerBase):
         for item in self._algo_config:
             if item is None:
                 continue  # skip to next loop
-            if not isinstance(item, (ConfigBase, Dict)):
+            if not isinstance(item, (BaseConfig, Dict)):
                 raise TypeError('Only accept ConfigBase or Dict as input')
             # no checking when model is object, which directly passing it
 
@@ -100,7 +100,7 @@ class RegTrainer(TrainerBase):
 
     def fill_algo_config_clf(self,
                              clf_or_wrapper,
-                             algo_config: Optional[ConfigBase] = None):
+                             algo_config: Optional[BaseConfig] = None):
         # nn wrapper
         if isinstance(clf_or_wrapper, NeuralNetworkWrapperBase):
             # have algo config
@@ -127,14 +127,14 @@ class RegTrainer(TrainerBase):
                             clf_or_wrapper,
                             X,
                             y,
-                            fit_config: Optional[Union[ConfigBase, Dict]] = None,
+                            fit_config: Optional[Union[BaseConfig, Dict]] = None,
                             ):
         # nn wrapper
         if isinstance(clf_or_wrapper, NeuralNetworkWrapperBase):
             if fit_config is None:
                 return clf_or_wrapper.fit(X, y)
 
-            if isinstance(fit_config, ConfigBase):
+            if isinstance(fit_config, BaseConfig):
                 return clf_or_wrapper.fit(X, y, **dict(fit_config))
 
             elif isinstance(fit_config, Dict):
@@ -146,7 +146,7 @@ class RegTrainer(TrainerBase):
                 return clf_or_wrapper.fit(X, y)
 
             else:
-                assert isinstance(fit_config, ConfigBase), "fig_config type not matched"
+                assert isinstance(fit_config, BaseConfig), "fig_config type not matched"
 
                 return clf_or_wrapper.fit(X, y, **dict(fit_config))
 
@@ -168,9 +168,9 @@ class RegTrainer(TrainerBase):
 class ParallelRegTrainer(RegTrainer):
     def __init__(self,
                  algo: List[str],
-                 algo_config: List[ConfigBase],
+                 algo_config: List[BaseConfig],
                  raw_data_model: RegressionDataModel,
-                 other_config: Dict[str, Union[List, ConfigBase, Any]] = {}):
+                 other_config: Dict[str, Union[List, BaseConfig, Any]] = {}):
         """
         handy function to realize parallel training
 
@@ -178,11 +178,11 @@ class ParallelRegTrainer(RegTrainer):
         ----------
         algo: List[str]
             the machine learning algorithm, any machine learning model that have fit/predict can used in here
-        algo_config: List[ConfigBase] or List[None]
+        algo_config: List[BaseConfig] or List[None]
             the respective config model of algo
         raw_data_model: RegressionDataModel
             data model obj, stores data and meta data
-        other_config: ConfigBase
+        other_config: BaseConfig
             other global config, shall be used in its sub-class
         """
         super(ParallelRegTrainer, self).__init__(algo, algo_config, raw_data_model, other_config)
@@ -192,9 +192,9 @@ class ParallelRegTrainer(RegTrainer):
         parallel = Parallel(n_jobs=-1)
 
         def _get_fitted_trainer(algo: List,
-                                algo_config: List[ConfigBase],
+                                algo_config: List[BaseConfig],
                                 raw_data_model: RegressionDataModel,
-                                other_config: Dict[str, ConfigBase] = {}):
+                                other_config: Dict[str, BaseConfig] = {}):
             trainer = RegTrainer(algo, algo_config, raw_data_model, other_config)
             trainer.fit()  # fit config auto filled by RegTrainer, no need to handle
             return trainer
@@ -216,9 +216,9 @@ class ParallelRegTrainer(RegTrainer):
 class MultiOutputRegTrainer(RegTrainer):
     def __init__(self,
                  algo: List[Union[str, Any]],
-                 algo_config: List[Optional[ConfigBase]],
+                 algo_config: List[Optional[BaseConfig]],
                  raw_data_model: RegressionDataModel,
-                 other_config: Dict[str, Union[List, ConfigBase, Any]] = {},
+                 other_config: Dict[str, Union[List, BaseConfig, Any]] = {},
                  parallel_n_jobs: int = -1):
         super(MultiOutputRegTrainer, self).__init__(algo, algo_config, raw_data_model, other_config)
         self.parallel_n_jobs = parallel_n_jobs
@@ -241,9 +241,9 @@ class MultiOutputRegTrainer(RegTrainer):
 class KFoldCVTrainer(RegTrainer):
     def __init__(self,
                  algo: List[Union[str, Any]],
-                 algo_config: List[Optional[ConfigBase]],
+                 algo_config: List[Optional[BaseConfig]],
                  raw_data_model: RegressionDataModel,
-                 other_config: Dict[str, Union[List, ConfigBase, Any]] = {},
+                 other_config: Dict[str, Union[List, BaseConfig, Any]] = {},
                  ):
         super(KFoldCVTrainer, self).__init__(algo, algo_config, raw_data_model, other_config)
 
