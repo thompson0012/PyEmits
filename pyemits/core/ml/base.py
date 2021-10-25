@@ -1,16 +1,16 @@
-from pyemits.common.config_model import ConfigBase
+from pyemits.common.config_model import BaseConfig
 from pyemits.common.validation import check_all_type_uniform
 from pyemits.common.py_native_dtype import SliceableDeque
 from pyemits.common.data_model import MetaDataModel
-from typing import List
+from typing import List, Tuple
 from abc import abstractmethod, ABC
 import joblib
 
 
-class TrainerBase(ABC):
+class BaseTrainer(ABC):
     def __init__(self,
                  algo,
-                 algo_config: List[ConfigBase],
+                 algo_config: List[BaseConfig],
                  ):
         self._algo = algo
         self._algo_config = algo_config
@@ -51,9 +51,13 @@ class TrainerBase(ABC):
         return self._fit()
 
 
-class PredictorBase(ABC):
+class BasePredictor(ABC):
     def __init__(self, clf_models):
-        self.clf_models = clf_models
+        self._clf_models = clf_models
+
+    @property
+    def clf_models(self):
+        return self._clf_models
 
     @abstractmethod
     def _predict(self, data_model):
@@ -77,7 +81,7 @@ def load_model(path_or_url):
     return joblib.load(path_or_url)
 
 
-class WrapperBase(ABC):
+class BaseWrapper(ABC):
     def __init__(self, model_obj, nickname=None):
         self._model_obj = model_obj
         self._nickname = nickname
@@ -101,7 +105,7 @@ class WrapperBase(ABC):
         return self._predict(*args, **kwargs)
 
 
-class NeuralNetworkWrapperBase(WrapperBase):
+class NeuralNetworkWrapperBase(BaseWrapper):
     def __init__(self, nn_model_obj, nickname=None):
         super(NeuralNetworkWrapperBase, self).__init__(nn_model_obj, nickname)
         self._nn_model_obj = nn_model_obj
