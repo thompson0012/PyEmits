@@ -122,3 +122,8 @@ class RegressionDataModel(BaseDataModel):
 class KFoldCVDataModel(RegressionDataModel):
     def __init__(self, X_data, y_data):
         super(KFoldCVDataModel, self).__init__(X_data, y_data)
+
+
+def MiscContainer(default_factory=list):
+    from collections import defaultdict
+    return defaultdict(default_factory)
