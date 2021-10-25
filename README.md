@@ -249,9 +249,43 @@ data_model.add_meta_data('X_shape', (1000,10,10))
 data_model.meta_data
 
 ```
-9. Anomaly detection (under development)
-   - see module: [anomaly detection](./pyemits/core/ml/anomaly_detection)
-   - Kalman filter
+9. Anomaly detection (partial finished)
+   - see: [anomaly detection](./examples/anomaly%20detector.ipynb)
+   - root cause analyzer (under development)
+   - Kalman filter (under development)
+```python
+from pyemits.core.ml.anomaly_detection.predictor import AnomalyPredictor
+from pyemits.core.ml.anomaly_detection.trainer import AnomalyTrainer, PyodWrapper
+from pyemits.common.data_model import AnomalyDataModel
+from pyemits.common.config_model import PyodIforestConfig
+from pyod.models.iforest import IForest
+from pyod.utils import generate_data
+
+contamination = 0.1  # percentage of outliers
+n_train = 1000  # number of training points
+n_test = 200  # number of testing points
+
+X_train, y_train, X_test, y_test = generate_data(
+    n_train=n_train, n_test=n_test, contamination=contamination)
+
+# highly flexible model config, accept str, PyodWrapper with/without initialized model
+# either one
+trainer = AnomalyTrainer(['IForest', PyodWrapper(IForest()),PyodWrapper(IForest),'IForest','IForest' ,'IForest'],None, AnomalyDataModel(X_train))
+trainer = AnomalyTrainer([PyodWrapper(IForest(contamination=0.05)),PyodWrapper(IForest)],[None, PyodIforestConfig(contamination=0.05)] , AnomalyDataModel(X_train))
+trainer.fit()
+
+# option 1
+predictor = AnomalyPredictor(trainer.clf_models)
+
+# option 2
+predictor = AnomalyPredictor(trainer.clf_models, other_config={'standard_scaler': predictor.misc_container['standard_scaler']})
+
+# option 3
+predictor = AnomalyPredictor(trainer.clf_models, other_config={'standard_scaler': predictor.misc_container['standard_scaler'], 'combination_config': {'n_buckets': 5}}, combination_method='moa')
+
+predictor.predict(AnomalyDataModel(X_test))
+
+```
 10. Evaluation (under development)
     - see module: [evaluation](./pyemits/evaluation)
     - backtesting
