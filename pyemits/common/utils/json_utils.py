@@ -1,6 +1,6 @@
 import json
 from abc import ABC, abstractmethod
-from typing import Union, List
+from typing import Union, List, Any
 
 
 class JsonFinderBase(ABC):
@@ -27,7 +27,7 @@ class JsonFinderBase(ABC):
     def iter_node(self, rows: Union[dict, list], road_step, target: Union[str, int]):
         pass
 
-    def find_one(self, key: str) -> list:
+    def find_one(self, key: str) -> Any:
         path_iter = self.iter_node(self.json_obj, [], key)
         for path in path_iter:
             return path
