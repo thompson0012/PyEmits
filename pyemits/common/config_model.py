@@ -19,7 +19,7 @@ def asdict_data_cls(data_cls):
 glob_random_state = 0
 
 
-class ConfigBase(BaseModel):
+class BaseConfig(BaseModel):
     """
     root class for Config
 
@@ -32,13 +32,13 @@ class ConfigBase(BaseModel):
     pass
 
 
-class KFoldConfig(ConfigBase):
+class KFoldConfig(BaseConfig):
     n_splits: int = 5
     shuffle: bool = True
     random_state: Optional[int] = None
 
 
-class RFConfig(ConfigBase):
+class RFConfig(BaseConfig):
     criterion: Literal['squared_error', 'absolute_error', 'poisson'] = 'squared_error'
     max_depth: Optional[int] = None
     min_samples_split: Union[int, float] = 2
@@ -57,7 +57,7 @@ class RFConfig(ConfigBase):
     max_samples: Optional[Union[int, float]] = None
 
 
-class GBDTConfig(ConfigBase):
+class GBDTConfig(BaseConfig):
     loss: Literal['squared_error', 'ls', 'absolute_error', 'lad', 'huber', 'quantile'] = 'squared_error'
     learning_rate: float = 0.1
     n_estimators: int = 100
@@ -81,7 +81,7 @@ class GBDTConfig(ConfigBase):
     ccp_alpha: float = 0.0  # non negative float
 
 
-class HGBDTConfig(ConfigBase):
+class HGBDTConfig(BaseConfig):
     """
     experimental features from sklearn
     """
@@ -105,7 +105,7 @@ class HGBDTConfig(ConfigBase):
     random_state: Optional[int] = None
 
 
-class AdaBoostConfig(ConfigBase):
+class AdaBoostConfig(BaseConfig):
     base_estimator: Optional[Any] = None
     n_estimators: int = 50
     learning_rate: float = 1.0
@@ -113,7 +113,7 @@ class AdaBoostConfig(ConfigBase):
     random_state: Optional[int] = None
 
 
-class MLPConfig(ConfigBase):
+class MLPConfig(BaseConfig):
     hidden_layer_sizes: tuple = (100,)
     activation: Literal['identity', 'logistic', 'tanh', 'relu'] = 'relu'
     solver: Literal['lbfgs', 'sgd', 'adam'] = 'adam'
@@ -139,7 +139,7 @@ class MLPConfig(ConfigBase):
     max_fun: int = 15000
 
 
-class ElasticNetConfig(ConfigBase):
+class ElasticNetConfig(BaseConfig):
     alpha: float = 1.0
     l1_ratio: float = 0.5
     fit_intercept: bool = True
@@ -154,7 +154,7 @@ class ElasticNetConfig(ConfigBase):
     selection: Literal['cyclic', 'random'] = 'cyclic'
 
 
-class RidgeConfig(ConfigBase):
+class RidgeConfig(BaseConfig):
     alpha: Union[float, Any] = 1.0
     fit_intercept: bool = True
     normalize: bool = False
@@ -166,7 +166,7 @@ class RidgeConfig(ConfigBase):
     random_state: Optional[int] = None
 
 
-class LassoConfig(ConfigBase):
+class LassoConfig(BaseConfig):
     alpha: float = 1.0
     fit_intercept: bool = True
     normalize: bool = False
@@ -180,7 +180,7 @@ class LassoConfig(ConfigBase):
     selection: Literal['cyclic', 'random'] = 'cyclic'
 
 
-class BayesianRidgeConfig(ConfigBase):
+class BayesianRidgeConfig(BaseConfig):
     n_iter: int = 300
     tol: float = 1e-3
     alpha_1: float = 1e-6
@@ -196,7 +196,7 @@ class BayesianRidgeConfig(ConfigBase):
     verbose: bool = False
 
 
-class HuberConfig(ConfigBase):
+class HuberConfig(BaseConfig):
     epsilon: float = 1.35  # >1.0
     max_iter: int = 100
     alpha: float = 0.0001
@@ -214,7 +214,7 @@ _SklObjective = Optional[
 ]
 
 
-class XGBoostConfig(ConfigBase):
+class XGBoostConfig(BaseConfig):
     max_depth: Optional[int] = None
     learning_rate: Optional[float] = None
     n_estimators: int = 100
@@ -246,7 +246,7 @@ class XGBoostConfig(ConfigBase):
     enable_categorical: bool = False
 
 
-class XGBoostFitConfig(ConfigBase):
+class XGBoostFitConfig(BaseConfig):
     sample_weight: Optional[array_like] = None
     base_margin: Optional[array_like] = None
     eval_set: Optional[List[Tuple[array_like, array_like]]] = None
@@ -260,7 +260,7 @@ class XGBoostFitConfig(ConfigBase):
     callbacks: Optional[List] = None
 
 
-class LGBMConfig(ConfigBase):
+class LGBMConfig(BaseConfig):
     boosting_type: str = 'gbdt'
     num_leaves: int = 31
     max_depth: int = -1
@@ -283,7 +283,7 @@ class LGBMConfig(ConfigBase):
     importance_type: str = 'split'
 
 
-class LGBMFitConfig(ConfigBase):
+class LGBMFitConfig(BaseConfig):
     sample_weight: array_like = None
     init_score: array_like = None
     eval_set: Optional[List] = None
@@ -299,18 +299,18 @@ class LGBMFitConfig(ConfigBase):
     init_model: Optional[Union[str, Any]] = None
 
 
-class KerasSequentialConfig(ConfigBase):
+class KerasSequentialConfig(BaseConfig):
     layer: List[Any]
     compile: Dict[str, Any]
 
 
-class PyodAbodConfig(ConfigBase):
+class PyodAbodConfig(BaseConfig):
     contamination: float = 0.1
     n_neighbors: int = 5
     method: Literal['fast', 'default'] = 'fast'
 
 
-class PyodAutoencoderConfig(ConfigBase):
+class PyodAutoencoderConfig(BaseConfig):
     hidden_neurons: Optional[List] = [64, 32, 32, 64]
     hidden_activation: Optional[str] = 'relu'
     output_activation: Optional[str] = 'sigmoid'
@@ -327,7 +327,7 @@ class PyodAutoencoderConfig(ConfigBase):
     contamination: float = 0.1
 
 
-class PyodAutoendcoderTorchConfig(ConfigBase):
+class PyodAutoendcoderTorchConfig(BaseConfig):
     hidden_neurons: Optional[List] = [64, 32]
     hidden_activation: Optional[str] = 'relu'
     batch_norm: Optional[bool] = True
@@ -342,7 +342,7 @@ class PyodAutoendcoderTorchConfig(ConfigBase):
     device: Optional[Any] = None
 
 
-class PyodCblofConfig(ConfigBase):
+class PyodCblofConfig(BaseConfig):
     n_cluster: int = 8
     contamination: float = 0.1
     clustering_estimator: Optional[Any] = None
@@ -354,24 +354,24 @@ class PyodCblofConfig(ConfigBase):
     n_jobs: int = 1
 
 
-class PyodCofConfig(ConfigBase):
+class PyodCofConfig(BaseConfig):
     contamination: float = 0.1
     n_neighbors: int = 20
     method: Literal['fast', 'memory'] = 'fast'
 
 
-class PyodCombinationConfig(ConfigBase):
+class PyodCombinationConfig(BaseConfig):
     """
     to be designed
     """
 
 
-class PyodCopodConfig(ConfigBase):
+class PyodCopodConfig(BaseConfig):
     contamination: float = 0.1
     n_jobs: int = 1
 
 
-class PyodDeepSvddConfig(ConfigBase):
+class PyodDeepSvddConfig(BaseConfig):
     c: Optional[Union[float, str]] = None
     use_ae: Optional[bool] = False
     hidden_neurons: Optional[List] = [64, 32]
@@ -389,20 +389,20 @@ class PyodDeepSvddConfig(ConfigBase):
     contamination: float = 0.1
 
 
-class PyodFeatureBaggingConfig(ConfigBase):
+class PyodFeatureBaggingConfig(BaseConfig):
     """
     to be designed
     """
 
 
-class PyodHbosConfig(ConfigBase):
+class PyodHbosConfig(BaseConfig):
     n_bins: int = 10
     alpha: float = 0.1
     tol: float = 0.5
     contamination: float = 0.1
 
 
-class PyodIforestConfig(ConfigBase):
+class PyodIforestConfig(BaseConfig):
     n_estimators: int = 100
     max_samples: Union[int, float, str] = 'auto'
     contamination: float = 0.1
@@ -414,7 +414,7 @@ class PyodIforestConfig(ConfigBase):
     verbose: int = 0
 
 
-class PyodKnnConfig(ConfigBase):
+class PyodKnnConfig(BaseConfig):
     contamination: float = 0.1
     n_neighbors: int = 5
     method: Literal['largest', 'mean', 'median'] = 'largest'
@@ -427,19 +427,19 @@ class PyodKnnConfig(ConfigBase):
     n_jobs: int = 1
 
 
-class PyodLmddConfig(ConfigBase):
+class PyodLmddConfig(BaseConfig):
     """
     to be filled
     """
 
 
-class PyodLodaConfig(ConfigBase):
+class PyodLodaConfig(BaseConfig):
     """
     to be filled
     """
 
 
-class PyodLofConfig(ConfigBase):
+class PyodLofConfig(BaseConfig):
     n_neighbors: int = 20
     algorithm: Literal['auto', 'ball_tree', 'kd_tree', 'brute'] = 'auto'
     leaf_size: int = 30
@@ -451,43 +451,43 @@ class PyodLofConfig(ConfigBase):
     novelty: bool = True
 
 
-class PyodLociConfig(ConfigBase):
+class PyodLociConfig(BaseConfig):
     """
     to be filled
     """
 
 
-class PyodLscpConfig(ConfigBase):
+class PyodLscpConfig(BaseConfig):
     """
     to be filled
     """
 
 
-class PyodMadConfig(ConfigBase):
+class PyodMadConfig(BaseConfig):
     """
     to be filled
     """
 
 
-class PyodMcdConfig(ConfigBase):
+class PyodMcdConfig(BaseConfig):
     """
     to be filled
     """
 
 
-class PyodMoGaalConfig(ConfigBase):
+class PyodMoGaalConfig(BaseConfig):
     """
     to be filled
     """
 
 
-class PyodOcsvmConfig(ConfigBase):
+class PyodOcsvmConfig(BaseConfig):
     """
     to be filled
     """
 
 
-class PyodPcaConfig(ConfigBase):
+class PyodPcaConfig(BaseConfig):
     n_components: Optional[Union[int, float, str]] = None
     n_selected_components: Optional[int] = None
     contamination: float = 0.1
@@ -501,43 +501,43 @@ class PyodPcaConfig(ConfigBase):
     standardization: bool = True
 
 
-class PyodRodConfig(ConfigBase):
+class PyodRodConfig(BaseConfig):
     """
         to be filled
     """
 
 
-class PyodSodConfig(ConfigBase):
+class PyodSodConfig(BaseConfig):
     """
         to be filled
     """
 
 
-class PyodSoGaalConfig(ConfigBase):
+class PyodSoGaalConfig(BaseConfig):
     """
         to be filled
     """
 
 
-class PyodSosConfig(ConfigBase):
+class PyodSosConfig(BaseConfig):
     """
         to be filled
     """
 
 
-class PyodSuodConfig(ConfigBase):
+class PyodSuodConfig(BaseConfig):
     """
         to be filled
     """
 
 
-class PyodVaeConfig(ConfigBase):
+class PyodVaeConfig(BaseConfig):
     """
         to be filled
     """
 
 
-class PyodXgbodConfig(ConfigBase):
+class PyodXgbodConfig(BaseConfig):
     """
         to be filled
     """
