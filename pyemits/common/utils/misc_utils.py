@@ -30,7 +30,7 @@ def map_values(dictionary: dict, func: Callable):
     return ret
 
 
-def slice_iterables(func: Callable, *iterables: Iterable , return_list=False):
+def slice_iterables(func: Callable, *iterables: Iterable, return_list=False):
     """
     Examples
     --------
@@ -55,3 +55,17 @@ def slice_iterables(func: Callable, *iterables: Iterable , return_list=False):
         return list(map(func, *iterables))
     return map(func, *iterables)
 
+
+def get_class_attributes(cls_obj, ignore_startswith='default'):
+    if ignore_startswith == 'default':
+        ignore_startswith = ['__', '_']
+
+    result = dir(cls_obj)
+
+    if ignore_startswith is None:
+        return result
+
+    for i in ignore_startswith:
+        result = list(filter(lambda x: not x.startswith(i), result))
+
+    return result
