@@ -34,11 +34,20 @@ def raise_if_incorrect_type(obj: object, expected_type: Any):
     raise TypeError(f"obj {str(obj)} is not an expected type {str(expected_type)}")
 
 
-def raise_if_value_not_contains(sequences, expected):
-    if any(map(lambda x: x in expected, sequences)):
+def raise_if_value_not_contains(sequences, references):
+    mapped_ = map(lambda x: x in references, sequences)
+    if any(mapped_):
         return True
 
-    raise ItemNotFoundError("item not expected")
+    raise ItemNotFoundError("item not found:")
+
+
+def raise_if_not_all_value_contains(sequences, references):
+    mapped = map(lambda x: x in references, sequences)
+    if not all(mapped):
+        raise ItemNotFoundError("item not contains:", list(mapped))
+
+    return True
 
 
 def raise_if_not_dataclass(obj):
