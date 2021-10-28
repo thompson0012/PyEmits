@@ -304,6 +304,10 @@ class KerasSequentialConfig(BaseConfig):
     compile: Dict[str, Any]
 
 
+class TorchLightningSequentialConfig(BaseConfig):
+    layer: List[Any]
+
+
 class PyodAbodConfig(BaseConfig):
     contamination: float = 0.1
     n_neighbors: int = 5
