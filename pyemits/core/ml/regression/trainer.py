@@ -1,17 +1,16 @@
-import torch
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, AdaBoostRegressor
 from sklearn.neural_network import MLPRegressor
 from sklearn.linear_model import ElasticNet, Ridge, Lasso, BayesianRidge, HuberRegressor
 from xgboost import XGBRegressor
 from lightgbm import LGBMRegressor
 from pyemits.core.ml.base import BaseTrainer, BaseWrapper, NeuralNetworkWrapperBase
-from pyemits.core.ml.regression.nn import TorchLightningWrapper
 from pyemits.common.config_model import BaseConfig, KerasSequentialConfig, TorchLightningSequentialConfig
 from pyemits.common.data_model import RegressionDataModel
 from pyemits.common.py_native_dtype import SliceableDeque
 from pyemits.common.validation import raise_if_value_not_contains
 from typing import List, Dict, Optional, Union, Any
-import numpy as np
+
+from pyemits.core.ml.regression.nn import TorchLightningWrapper
 
 RegModelContainer = {
     'RF': RandomForestRegressor,
@@ -35,6 +34,76 @@ def _get_reg_model(algo_or_wrapper: Union[str, BaseWrapper]):
     # return wrapper model
     elif isinstance(algo_or_wrapper, BaseWrapper):
         return algo_or_wrapper
+
+
+def fill_algo_config_clf(clf_or_wrapper,
+                         algo_config: Optional[BaseConfig] = None):
+    # nn wrapper
+    if isinstance(clf_or_wrapper, NeuralNetworkWrapperBase):
+        # have algo config
+        if algo_config is not None:
+            # if keras model object
+            if isinstance(algo_config, KerasSequentialConfig):
+                for i in algo_config.layer:
+                    clf_or_wrapper.model_obj.add(i)
+                clf_or_wrapper.model_obj.compile(**algo_config.compile)
+                return clf_or_wrapper
+            elif isinstance(algo_config, TorchLightningSequentialConfig):
+                clf_or_wrapper: TorchLightningWrapper
+                for nos, layer in enumerate(algo_config.layer, 1):
+                    clf_or_wrapper.add_layer2blank_model(str(nos), layer)
+                return clf_or_wrapper
+            # not support pytorch, mxnet model right now
+            raise TypeError('now only support KerasSequentialConfig')
+
+        # no algo config
+        return clf_or_wrapper
+
+    # sklearn clf path
+    if algo_config is None:
+        return clf_or_wrapper()  # activate
+    else:
+        return clf_or_wrapper(**dict(algo_config))
+
+
+def fill_fit_config_clf(clf_or_wrapper,
+                        X,
+                        y,
+                        fit_config: Optional[Union[BaseConfig, Dict]] = None,
+                        ):
+    from pyemits.core.ml.regression.nn import torchlighting_data_helper
+    # nn wrapper
+    if isinstance(clf_or_wrapper, NeuralNetworkWrapperBase):
+        dl_train, dl_val = torchlighting_data_helper(X, y)
+
+        if fit_config is None:
+            # pytorch_lightning path
+            if isinstance(clf_or_wrapper, TorchLightningWrapper):
+                return clf_or_wrapper.fit(dl_train, dl_val)
+            # keras path
+            return clf_or_wrapper.fit(X, y)
+
+        if isinstance(fit_config, BaseConfig):
+            if isinstance(clf_or_wrapper, TorchLightningWrapper):
+                return clf_or_wrapper.fit(dl_train, dl_val, **dict(fit_config))
+            # keras path
+            return clf_or_wrapper.fit(X, y, **dict(fit_config))
+
+        elif isinstance(fit_config, Dict):
+            if isinstance(clf_or_wrapper, TorchLightningWrapper):
+                return clf_or_wrapper.fit(dl_train, dl_val, **fit_config)
+            # keras path
+            return clf_or_wrapper.fit(X, y, **fit_config)
+
+    # sklearn/xgboost/lightgbm clf
+    else:
+        if fit_config is None:
+            return clf_or_wrapper.fit(X, y)
+
+        else:
+            assert isinstance(fit_config, BaseConfig), "fig_config type not matched"
+
+            return clf_or_wrapper.fit(X, y, **dict(fit_config))
 
 
 class RegTrainer(BaseTrainer):
@@ -108,76 +177,6 @@ class RegTrainer(BaseTrainer):
         else:
             raise TypeError('fit config not a list type')
 
-    def fill_algo_config_clf(self,
-                             clf_or_wrapper,
-                             algo_config: Optional[BaseConfig] = None):
-        # nn wrapper
-        if isinstance(clf_or_wrapper, NeuralNetworkWrapperBase):
-            # have algo config
-            if algo_config is not None:
-                # if keras model object
-                if isinstance(algo_config, KerasSequentialConfig):
-                    for i in algo_config.layer:
-                        clf_or_wrapper.model_obj.add(i)
-                    clf_or_wrapper.model_obj.compile(**algo_config.compile)
-                    return clf_or_wrapper
-                elif isinstance(algo_config, TorchLightningSequentialConfig):
-                    clf_or_wrapper: TorchLightningWrapper
-                    for nos, layer in enumerate(algo_config.layer, 1):
-                        clf_or_wrapper.add_layer2blank_model(str(nos), layer)
-                    return clf_or_wrapper
-                # not support pytorch, mxnet model right now
-                raise TypeError('now only support KerasSequentialConfig')
-
-            # no algo config
-            return clf_or_wrapper
-
-        # sklearn clf path
-        if algo_config is None:
-            return clf_or_wrapper()  # activate
-        else:
-            return clf_or_wrapper(**dict(algo_config))
-
-    def fill_fit_config_clf(self,
-                            clf_or_wrapper,
-                            X,
-                            y,
-                            fit_config: Optional[Union[BaseConfig, Dict]] = None,
-                            ):
-        from pyemits.core.ml.regression.nn import torchlighting_data_helper
-        # nn wrapper
-        if isinstance(clf_or_wrapper, NeuralNetworkWrapperBase):
-            dl_train, dl_val = torchlighting_data_helper(X, y)
-
-            if fit_config is None:
-                # pytorch_lightning path
-                if isinstance(clf_or_wrapper, TorchLightningWrapper):
-                    return clf_or_wrapper.fit(dl_train, dl_val)
-                # keras path
-                return clf_or_wrapper.fit(X, y)
-
-            if isinstance(fit_config, BaseConfig):
-                if isinstance(clf_or_wrapper, TorchLightningWrapper):
-                    return clf_or_wrapper.fit(dl_train, dl_val, **dict(fit_config))
-                # keras path
-                return clf_or_wrapper.fit(X, y, **dict(fit_config))
-
-            elif isinstance(fit_config, Dict):
-                if isinstance(clf_or_wrapper, TorchLightningWrapper):
-                    return clf_or_wrapper.fit(dl_train, dl_val, **fit_config)
-                # keras path
-                return clf_or_wrapper.fit(X, y, **fit_config)
-
-        # sklearn/xgboost/lightgbm clf
-        else:
-            if fit_config is None:
-                return clf_or_wrapper.fit(X, y)
-
-            else:
-                assert isinstance(fit_config, BaseConfig), "fig_config type not matched"
-
-                return clf_or_wrapper.fit(X, y, **dict(fit_config))
-
     def _fit(self):
         X = self.raw_data_model.X_data
         y = self.raw_data_model.y_data
@@ -187,8 +186,8 @@ class RegTrainer(BaseTrainer):
         fit_config = self.get_fill_fit_config()
 
         for n, (algo, algo_config) in enumerate(zip(self._algo, self._algo_config)):
-            clf = self.fill_algo_config_clf(_get_reg_model(algo), algo_config)
-            self.fill_fit_config_clf(clf, X, y, fit_config[n])
+            clf = fill_algo_config_clf(_get_reg_model(algo), algo_config)
+            fill_fit_config_clf(clf, X, y, fit_config[n])
             self.clf_models.append((str(algo), clf))
         return
 
@@ -264,9 +263,9 @@ class MultiOutputRegTrainer(RegTrainer):
         y = self.raw_data_model.y_data
 
         for n, (algo, algo_config) in enumerate(zip(self._algo, self._algo_config)):
-            clf = self.fill_algo_config_clf(_get_reg_model(algo), algo_config)  # clf already activated
+            clf = fill_algo_config_clf(_get_reg_model(algo), algo_config)  # clf already activated
             clf = MultiOutputRegressor(estimator=clf, n_jobs=self.parallel_n_jobs)
-            self.fill_fit_config_clf(clf, X, y, fit_config[n])
+            fill_fit_config_clf(clf, X, y, fit_config[n])
             self.clf_models.append((str(algo), clf))
         return
 
