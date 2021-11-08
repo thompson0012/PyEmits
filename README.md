@@ -1,6 +1,16 @@
 ![Project Icon](./assets/icon.png)
 
-PyEmits, a python package for easy manipulation in time-series data. Time-series data is very common in real life.
+PyEmits, a python package for easy manipulation in time-series data.
+
+The ultimate goal:
+
+> Keep it simple and stupid
+
+> Make everything configurable
+
+> Uniform API for machine learning and deep learning 
+
+Time-series data is very common in real life.
 
 - Engineering
 - FSI industry (Financial Services Industry)
@@ -35,6 +45,8 @@ each new business unit shall build the following wheels again and again
    1. descriptive data analysis
    2. ...
 
+data scientist need to write different code to develop their model
+is there any a package integrate all ml lib with single simple api?
 That's why I create this project, also for fun. haha
 
 This project is under active development, free to use (Apache 2.0)
