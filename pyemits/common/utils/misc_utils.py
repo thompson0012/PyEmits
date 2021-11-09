@@ -1,4 +1,4 @@
-from typing import Callable, Dict, Iterable
+from typing import Callable, Dict, Iterable, Union
 
 
 def map_values(dictionary: dict, func: Callable):
@@ -71,7 +71,32 @@ def get_class_attributes(cls_obj, ignore_startswith='default'):
     return result
 
 
-def parallel_it(func, func_args, element_type='auto_infer'):
+def parallel_it(func: Callable,
+                func_args: Union[Iterable, zip],
+                element_type: str = 'auto_infer'):
+    """
+    Examples
+    --------
+    >>> import numpy as np
+    >>> def create_fake_np(low, size):
+    ...     return np.random.randint(low, size=size)
+
+    >>> res = parallel_it(create_fake_np, zip([10000]*100,[100000]*100))
+    >>> res = parallel_it(create_fake_np, list(zip([10000]*100000,[100000]*100000)))
+    >>> res = parallel_it(create_fake_np, [dict(low=10000,size=100000)]*100)
+
+    Parameters
+    ----------
+    func:
+
+    func_args:
+
+    element_type: str
+
+    Returns
+    -------
+
+    """
     from joblib import Parallel, delayed
     from pyemits.common.validation import raise_if_incorrect_type
     from typing import Iterable
