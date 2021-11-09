@@ -69,3 +69,37 @@ def get_class_attributes(cls_obj, ignore_startswith='default'):
         result = list(filter(lambda x: not x.startswith(i), result))
 
     return result
+
+
+def parallel_it(func, func_args, element_type='auto_infer'):
+    from joblib import Parallel, delayed
+    from pyemits.common.validation import raise_if_incorrect_type
+    from typing import Iterable
+    raise_if_incorrect_type(func_args, Iterable)
+
+    if element_type == 'auto_infer':
+        if type(func_args) == 'zip':
+            # zip element must be tuple like
+            res = Parallel(n_jobs=-1)(delayed(func)(*args) for args in func_args)
+            return res
+
+        elif isinstance(func_args, (tuple, list)):
+            # dict type
+            # keywords args
+            if isinstance(func_args[0], dict):
+                res = Parallel(n_jobs=-1)(delayed(func)(**kwargs) for kwargs in func_args)
+                return res
+
+            # others, apart from dict type
+            # positional args
+            res = Parallel(n_jobs=-1)(delayed(func)(*args) for args in func_args)
+            return res
+
+    if element_type == 'tuple':
+        res = Parallel(n_jobs=-1)(delayed(func)(*args) for args in func_args)
+        return res
+    elif element_type == 'dict':
+        res = Parallel(n_jobs=-1)(delayed(func)(**kwargs) for kwargs in func_args)
+        return res
+
+    raise KeyError(f'element type: {element_type} is not acceptable')
