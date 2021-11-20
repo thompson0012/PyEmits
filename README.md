@@ -8,7 +8,7 @@ The ultimate goal:
 
 > Make everything configurable
 
-> Uniform API for machine learning and deep learning 
+> Uniform API for machine learning and deep learning
 
 Time-series data is very common in real life.
 
@@ -17,42 +17,172 @@ Time-series data is very common in real life.
 - FMCG (Fast Moving Consumer Good)
 
 Data scientist's work consists of:
+
 - forecasting
 - prediction/simulation
 - data prepration
 - cleansing
 - anomaly detection
-- descriptive data analysis/exploratory data analysis 
+- descriptive data analysis/exploratory data analysis
 
 each new business unit shall build the following wheels again and again
-1. data pipeline
-   1. extraction
-   2. transformation
-      1. cleansing
-      2. feature engineering
-      3. remove outliers
-      4. AI landing for prediction, forecasting
-   3. write it back to database
-2. ml framework
-   1. multiple model training
-   2. multiple model prediction
-   3. kfold validation
-   4. anomaly detection
-   5. forecasting
-   6. deep learning model in easy way
-   7. ensemble modelling
-3. exploratory data analysis
-   1. descriptive data analysis
-   2. ...
 
-data scientist need to write different code to develop their model
-is there any a package integrate all ml lib with single simple api?
-That's why I create this project, also for fun. haha
+1. data pipeline
+    1. extraction
+    2. transformation
+        1. cleansing
+        2. feature engineering
+        3. remove outliers
+        4. AI landing for prediction, forecasting
+    3. write it back to database
+2. ml framework
+    1. multiple model training
+    2. multiple model prediction
+    3. kfold validation
+    4. anomaly detection
+    5. forecasting
+    6. deep learning model in easy way
+    7. ensemble modelling
+3. exploratory data analysis
+    1. descriptive data analysis
+    2. ...
+
+data scientist need to write different code to develop their model is there any a package integrate all ml lib with
+single simple api? That's why I create this project, also for fun. haha
 
 This project is under active development, free to use (Apache 2.0)
 I am happy to see anyone can contribute for more advancement on features
 
+# Development Progress
+
+<table>
+    <tr>
+        <td>Features</td>
+        <td>Progress</td>
+        <td>Available at version</td>
+        <td>Notes</td>
+    </tr>
+    <tr>
+        <td>PyOD integration</td>
+        <td>80%</td>
+        <td>0.1.2</td>
+        <td>model parameters config are not yet finished</td>
+    </tr>
+    <tr>
+        <td>XGBoost integration</td>
+        <td>80%</td>
+        <td>0.1.2</td>
+        <td>model parameters config are not yet finished</td>
+    </tr>
+    <tr>
+        <td>LightGBM integration</td>
+        <td>80%</td>
+        <td>0.1.2</td>
+        <td>model parameters config are not yet finished</td>
+    </tr>
+    <tr>
+        <td>Sklearn model integration</td>
+        <td>80%</td>
+        <td>0.1.2</td>
+        <td>model parameters config are not yet finished</td>
+    </tr>
+    <tr>
+        <td>Keras integration</td>
+        <td>100%</td>
+        <td>0.1.2</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Pytorch_lightning integration</td>
+        <td>100%</td>
+        <td>0.1.2</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>MXnet integration</td>
+        <td>0%</td>
+        <td>tbc</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>DB connection</td>
+        <td>0%</td>
+        <td>tbc</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>aggregation</td>
+        <td>0%</td>
+        <td>0.1.3</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>cleansing</td>
+        <td>0%</td>
+        <td>0.1.3</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>dimensional reduction</td>
+        <td>0%</td>
+        <td>0.1.3</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Kalman filtering</td>
+        <td>0%</td>
+        <td>0.1.3 or later</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>model evaluation and visualization</td>
+        <td>0%</td>
+        <td>0.1.3 or later</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>data profile for exploration</td>
+        <td>20%</td>
+        <td>0.1.3 or later</td>
+        <td>finished data statistics only</td>
+    </tr>
+    <tr>
+        <td>forecast at scale</td>
+        <td>100%</td>
+        <td>0.1.2</td>
+        <td>see preprocessing.scaling.py</td>
+    </tr>
+
+</table>
+
+# Release Update
+
+<table>
+    <tr>
+        <td>Version</td>
+        <td>Features</td>
+        <td>Notes</td>
+    </tr>
+    <tr>
+        <td>0.1</td>
+        <td>initialization of project</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>0.1.1</td>
+        <td>RegTrainer/ParallelTrainer/KFoldCV</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>0.1.2</td>
+        <td>PyOD/Keras/Pytorch_lightning/scaling/splitting</td>
+        <td></td>
+    </tr>
+
+</table>
+
 # Install
+
 ```shell
 pip install pyemits
 ```
@@ -60,11 +190,11 @@ pip install pyemits
 # Features highlight
 
 > scikit-learn API style
-> 
+>
 > inherit the design concept of pyecharts, "everything is configurable"
-> 
+>
 > highly flexible configuration items, can easily integrate with existing model
-> 
+>
 > easily integrate to SaaS product for product proof of concept
 
 1. Easy training
@@ -156,16 +286,17 @@ config = KerasSequentialConfig(layer=[LSTM(128,
 raw_data_model = RegressionDataModel(X, y)
 trainer = RegTrainer([keras_lstm_model],
                      [config],
-                     raw_data_model, 
-                     {'fit_config' : [dict(epochs=10, batch_size=32)]})
+                     raw_data_model,
+                     {'fit_config': [dict(epochs=10, batch_size=32)]})
 trainer.fit()
 ```
-PyTorch, MXNet under development
-you can leave me a message if you want to contribute
+
+PyTorch, MXNet under development you can leave me a message if you want to contribute
 
 3. MultiOutput training
+
 ```python
-import numpy as np 
+import numpy as np
 
 from pyemits.core.ml.regression.trainer import RegressionDataModel, MultiOutputRegTrainer
 from pyemits.core.preprocessing.splitting import SlidingWindowSplitter
@@ -175,67 +306,75 @@ y = np.random.randint(1, 100, size=(10000, 1))
 
 # when use auto-regressive like MultiOutput, pls set ravel = True
 # ravel = False, when you are using LSTM which support multiple dimension
-splitter = SlidingWindowSplitter(24,24,ravel=True)
+splitter = SlidingWindowSplitter(24, 24, ravel=True)
 X, y = splitter.split(X, y)
 
-raw_data_model = RegressionDataModel(X,y)
+raw_data_model = RegressionDataModel(X, y)
 trainer = MultiOutputRegTrainer(['XGBoost'], [None], raw_data_model)
 trainer.fit()
 ```
+
 4. Parallel training
-   - provide fast training using parallel job
-   - use RegTrainer as base, but add Parallel running
+    - provide fast training using parallel job
+    - use RegTrainer as base, but add Parallel running
+
 ```python
-import numpy as np 
+import numpy as np
 
 from pyemits.core.ml.regression.trainer import RegressionDataModel, ParallelRegTrainer
 
 X = np.random.randint(1, 100, size=(10000, 1))
 y = np.random.randint(1, 100, size=(10000, 1))
 
-raw_data_model = RegressionDataModel(X,y)
+raw_data_model = RegressionDataModel(X, y)
 trainer = ParallelRegTrainer(['XGBoost', 'LightGBM'], [None, None], raw_data_model)
 trainer.fit()
 ```
 
 or you can use RegTrainer for multiple model, but it is not in Parallel job
-```python
-import numpy as np 
 
-from pyemits.core.ml.regression.trainer import RegressionDataModel,  RegTrainer
+```python
+import numpy as np
+
+from pyemits.core.ml.regression.trainer import RegressionDataModel, RegTrainer
 
 X = np.random.randint(1, 100, size=(10000, 1))
 y = np.random.randint(1, 100, size=(10000, 1))
 
-raw_data_model = RegressionDataModel(X,y)
+raw_data_model = RegressionDataModel(X, y)
 trainer = RegTrainer(['XGBoost', 'LightGBM'], [None, None], raw_data_model)
 trainer.fit()
 ```
-5. KFold training
-   - KFoldConfig is global config, will apply to all
-```python
-import numpy as np 
 
-from pyemits.core.ml.regression.trainer import RegressionDataModel,  KFoldCVTrainer
+5. KFold training
+    - KFoldConfig is global config, will apply to all
+
+```python
+import numpy as np
+
+from pyemits.core.ml.regression.trainer import RegressionDataModel, KFoldCVTrainer
 from pyemits.common.config_model import KFoldConfig
 
 X = np.random.randint(1, 100, size=(10000, 1))
 y = np.random.randint(1, 100, size=(10000, 1))
 
-raw_data_model = RegressionDataModel(X,y)
-trainer = KFoldCVTrainer(['XGBoost', 'LightGBM'], [None, None], raw_data_model, {'kfold_config':KFoldConfig(n_splits=10)})
+raw_data_model = RegressionDataModel(X, y)
+trainer = KFoldCVTrainer(['XGBoost', 'LightGBM'], [None, None], raw_data_model,
+                         {'kfold_config': KFoldConfig(n_splits=10)})
 trainer.fit()
 ```
+
 6. Easy prediction
+
 ```python
-import numpy as np 
-from pyemits.core.ml.regression.trainer import RegressionDataModel,  RegTrainer
+import numpy as np
+from pyemits.core.ml.regression.trainer import RegressionDataModel, RegTrainer
 from pyemits.core.ml.regression.predictor import RegPredictor
 
 X = np.random.randint(1, 100, size=(10000, 1))
 y = np.random.randint(1, 100, size=(10000, 1))
 
-raw_data_model = RegressionDataModel(X,y)
+raw_data_model = RegressionDataModel(X, y)
 trainer = RegTrainer(['XGBoost', 'LightGBM'], [None, None], raw_data_model)
 trainer.fit()
 
@@ -243,28 +382,33 @@ predictor = RegPredictor(trainer.clf_models, 'RegTrainer')
 predictor.predict(RegressionDataModel(X))
 
 ```
+
 7. Forecast at scale
-   - see examples: [forecast at scale.ipynb](./examples/forecast%20at%20scale.ipynb)
+    - see examples: [forecast at scale.ipynb](./examples/forecast%20at%20scale.ipynb)
 8. Data Model
+
 ```python
 from pyemits.common.data_model import RegressionDataModel
 import numpy as np
-X = np.random.randint(1, 100, size=(1000,10,10))
+
+X = np.random.randint(1, 100, size=(1000, 10, 10))
 y = np.random.randint(1, 100, size=(1000, 1))
 
 data_model = RegressionDataModel(X, y)
 
-data_model._update_variable('X_shape', (1000,10,10))
+data_model._update_variable('X_shape', (1000, 10, 10))
 data_model.X_shape
 
-data_model.add_meta_data('X_shape', (1000,10,10))
+data_model.add_meta_data('X_shape', (1000, 10, 10))
 data_model.meta_data
 
 ```
+
 9. Anomaly detection (partial finished)
-   - see: [anomaly detection](./examples/anomaly%20detector.ipynb)
-   - root cause analyzer (under development)
-   - Kalman filter (under development)
+    - see: [anomaly detection](./examples/anomaly%20detector.ipynb)
+    - root cause analyzer (under development)
+    - Kalman filter (under development)
+
 ```python
 from pyemits.core.ml.anomaly_detection.predictor import AnomalyPredictor
 from pyemits.core.ml.anomaly_detection.trainer import AnomalyTrainer, PyodWrapper
@@ -282,37 +426,43 @@ X_train, y_train, X_test, y_test = generate_data(
 
 # highly flexible model config, accept str, PyodWrapper with/without initialized model
 # either one
-trainer = AnomalyTrainer(['IForest', PyodWrapper(IForest()),PyodWrapper(IForest),'IForest','IForest' ,'IForest'],None, AnomalyDataModel(X_train))
-trainer = AnomalyTrainer([PyodWrapper(IForest(contamination=0.05)),PyodWrapper(IForest)],[None, PyodIforestConfig(contamination=0.05)] , AnomalyDataModel(X_train))
+trainer = AnomalyTrainer(['IForest', PyodWrapper(IForest()), PyodWrapper(IForest), 'IForest', 'IForest', 'IForest'],
+                         None, AnomalyDataModel(X_train))
+trainer = AnomalyTrainer([PyodWrapper(IForest(contamination=0.05)), PyodWrapper(IForest)],
+                         [None, PyodIforestConfig(contamination=0.05)], AnomalyDataModel(X_train))
 trainer.fit()
 
 # option 1
 predictor = AnomalyPredictor(trainer.clf_models)
 
 # option 2
-predictor = AnomalyPredictor(trainer.clf_models, other_config={'standard_scaler': predictor.misc_container['standard_scaler']})
+predictor = AnomalyPredictor(trainer.clf_models,
+                             other_config={'standard_scaler': predictor.misc_container['standard_scaler']})
 
 # option 3
-predictor = AnomalyPredictor(trainer.clf_models, other_config={'standard_scaler': predictor.misc_container['standard_scaler'], 'combination_config': {'n_buckets': 5}}, combination_method='moa')
+predictor = AnomalyPredictor(trainer.clf_models,
+                             other_config={'standard_scaler': predictor.misc_container['standard_scaler'],
+                                           'combination_config': {'n_buckets': 5}}, combination_method='moa')
 
 predictor.predict(AnomalyDataModel(X_test))
 
 ```
+
 10. Evaluation (under development)
     - see module: [evaluation](./pyemits/evaluation)
     - backtesting
     - model evaluation
-11. Ensemble (under development) 
+11. Ensemble (under development)
     - blending
     - stacking
     - voting
     - by combo package
-      - moa
-      - aom
-      - average
-      - median
-      - maximization
-12. IO 
+        - moa
+        - aom
+        - average
+        - median
+        - maximization
+12. IO
     - db connection
     - local
 13. dashboard ???
@@ -324,6 +474,7 @@ predictor.predict(AnomalyDataModel(X_test))
 15. to be confirmed
 
 # References
+
 the following libraries gave me some idea/insight
 
 1. greykit
