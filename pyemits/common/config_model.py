@@ -32,6 +32,38 @@ class BaseConfig(BaseModel):
     pass
 
 
+class TrainerOtherConfig(BaseConfig):
+    """
+    Trainer Other Config
+    """
+    pass
+
+
+class RegressionTrainerOtherConfig(TrainerOtherConfig):
+    fit_config: Optional[Union[Dict, BaseConfig]] = None
+    kfold_config: Optional[Union[Dict, BaseConfig]] = None
+
+
+class AnomalyTrainerOtherConfig(TrainerOtherConfig):
+    pass
+
+
+class PredictorOtherConfig(BaseConfig):
+    """
+    Predictor Other Config
+    """
+    pass
+
+
+class RegressionPredictorOtherConfig(PredictorOtherConfig):
+    pass
+
+
+class AnomalyPredictorOtherConfig(PredictorOtherConfig):
+    combination_config: Optional[Any] = None
+    standard_scaler: Optional[Any] = None
+
+
 class KFoldConfig(BaseConfig):
     n_splits: int = 5
     shuffle: bool = True
