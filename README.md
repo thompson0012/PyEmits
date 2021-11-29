@@ -449,7 +449,7 @@ predictor.predict(AnomalyDataModel(X_test))
 ```
 
 10. Evaluation (under development)
-    - see module: [evaluation](./pyemits/evaluation)
+    - see module: [evaluation](pyemits/core/evaluation)
     - backtesting
     - model evaluation
 11. Ensemble (under development)
