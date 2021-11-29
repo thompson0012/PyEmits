@@ -60,7 +60,7 @@ class RegressionPredictorOtherConfig(PredictorOtherConfig):
 
 
 class AnomalyPredictorOtherConfig(PredictorOtherConfig):
-    combination_config: Optional[Any] = None
+    combination_config: Optional[Any] = None  # see combo package for more details
     standard_scaler: Optional[Any] = None
 
 
