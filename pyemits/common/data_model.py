@@ -1,12 +1,12 @@
 from abc import abstractmethod, ABC
 from pyemits.common.validation import raise_if_incorrect_type
-from typing import Union, Any, List
+from typing import Union, Any, List, Dict
 from pyemits.common.errors import ItemOverwriteError
 
 
 class BaseDataModel(ABC):
     def __init__(self):
-        self._meta_data = {}
+        self._meta_data: Dict = {}
         pass
 
     @property
@@ -46,6 +46,9 @@ class BaseDataModel(ABC):
 
         raise TypeError
 
+    def get_meta_data(self, key: str):
+        return self._meta_data.get(key, None)
+
     def pop_meta_data(self, key: str):
         """
         provide marco-level removal of key elements, the whole elements of dict[key] will be removed.
@@ -62,11 +65,11 @@ class BaseDataModel(ABC):
         self._meta_data.pop(key)
         return
 
-    def _update_variable(self, name: str, values: Any):
-        self.__register_update_variable(name, values)
+    def _update_attributes(self, name: str, values: Any):
+        self.__register_update_attributes(name, values)
         return
 
-    def __register_update_variable(self, name: str, values: Any):
+    def __register_update_attributes(self, name: str, values: Any):
         """
         private method for loading data cls/config dict and add it into class's attributes
 
