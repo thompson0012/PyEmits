@@ -1,5 +1,6 @@
 ![Project Icon](./assets/icon.png)
 
+# What is Pyemits
 PyEmits, a python package for easy manipulation in time-series data.
 
 The ultimate goal:
@@ -10,6 +11,8 @@ The ultimate goal:
 
 > Uniform API for machine learning and deep learning
 
+
+# Why need Pyemits?
 Time-series data is very common in real life.
 
 - Engineering
@@ -29,7 +32,7 @@ Data scientist's work consists of:
 each new business unit shall build the following wheels again and again
 
 
-# Background
+## if you are facing these problems, Pyemits is fit to you
 1. data pipeline
     1. extraction
     2. transformation
@@ -392,7 +395,7 @@ predictor.predict(RegressionDataModel(X))
 ```
 
 # Forecast at scale
-    - see examples: [forecast at scale.ipynb](./examples/forecast%20at%20scale.ipynb)
+- see examples: [forecast at scale.ipynb](./examples/forecast%20at%20scale.ipynb)
 
 #Data Model
 
@@ -456,7 +459,7 @@ predictor = AnomalyPredictor(trainer.clf_models,
 predictor.predict(AnomalyDataModel(X_test))
 
 ```
-# data ETL pipeline
+# Data ETL pipeline
 
 easy configuration, register steps and tasks in whole pipeline
 ```python
@@ -512,16 +515,17 @@ pipeline.get_pipeline_snapshot_res(step_id=1,tasks_id=0)
 - backtesting
 - model evaluation
 
-#Ensemble (under development)
-    - blending
-    - stacking
-    - voting
-    - by combo package
-        - moa
-        - aom
-        - average
-        - median
-        - maximization
+# Ensemble (under development)
+- blending
+- stacking
+- voting
+- by combo package
+    - moa
+    - aom
+    - average
+    - median
+    - maximization
+
 # IO
 - db connection
 - local
