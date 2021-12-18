@@ -230,14 +230,14 @@ class Pipeline:
     def get_step_task_mapping(self):
         return dict(enumerate(zip(self.steps_name, self.tasks_name)))
 
-    def get_pipeline_snapshot_res(self, steps_id=None, task_id=None):
-        if steps_id is None:
+    def get_pipeline_snapshot_res(self, step_id=None, task_id=None):
+        if step_id is None:
             return self._pipeline_snapshot_res
         else:
             if task_id is None:
-                return self._pipeline_snapshot_res[steps_id]
+                return self._pipeline_snapshot_res[step_id]
             else:
-                return self._pipeline_snapshot_res[steps_id][task_id].data
+                return self._pipeline_snapshot_res[step_id][task_id].data
 
     def reset_pipeline(self):
         self._pipeline_steps = SliceableDeque()
