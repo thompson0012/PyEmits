@@ -397,7 +397,7 @@ predictor.predict(RegressionDataModel(X))
 # Forecast at scale
 - see examples: [forecast at scale.ipynb](./examples/forecast%20at%20scale.ipynb)
 
-#Data Model
+# Data Model
 
 ```python
 from pyemits.common.data_model import RegressionDataModel
@@ -459,21 +459,29 @@ predictor = AnomalyPredictor(trainer.clf_models,
 predictor.predict(AnomalyDataModel(X_test))
 
 ```
+
 # Data ETL pipeline
 
 easy configuration, register steps and tasks in whole pipeline
-```python
-from pyemits.core.preprocessing import DataNode, NumpyDataNode, PandasDataFrameDataNode, PandasSeriesDataNode, Task, Step, Pipeline
-import pandas as pd
-import numpy as np 
 
-df = pd.DataFrame(np.random.random(size=(20,20)))
+```python
+
+from pyemits.core.preprocessing.pipeline import DataNode, NumpyDataNode, PandasDataFrameDataNode, PandasSeriesDataNode,
+
+Pipeline
+Step
+Task
+import pandas as pd
+import numpy as np
+
+df = pd.DataFrame(np.random.random(size=(20, 20)))
 
 dn = PandasDataFrameDataNode.from_pandas(df)
 
+
 def sum_each_col(data, a=1, b=2):
-    
     return data.sum()
+
 
 def sum_series(data):
     return np.array([data.sum()])
