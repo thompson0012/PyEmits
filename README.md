@@ -457,6 +457,8 @@ predictor.predict(AnomalyDataModel(X_test))
 
 ```
 # data ETL pipeline
+
+easy configuration, register steps and tasks in whole pipeline
 ```python
 from pyemits.core.preprocessing import DataNode, NumpyDataNode, PandasDataFrameDataNode, PandasSeriesDataNode, Task, Step, Pipeline
 import pandas as pd
@@ -472,11 +474,17 @@ def sum_each_col(data, a=1, b=2):
 
 def sum_series(data):
     return np.array([data.sum()])
+```
 
+task registration and arguments registration
+```markdown
 task_a = Task(sum_each_col)
 task_a.register_args(a=10,b=10)
 task_b = Task(sum_series)
+```
 
+pipeline register step and execute
+```markdown
 pipeline = Pipeline()
 
 step_a = Step('step_a',[task_a],'')
@@ -487,18 +495,15 @@ pipeline.register_step(step_b)
 pipeline.execute(dn)
 ```
 
+know the steps and its tasks from start to end
 ```markdown
 pipeline.get_step_task_mapping()
 >>> {0: ('test', ['sum_each_col']), 1: ('test1', ['sum_series'])}
 ```
 
+know the snapshot result in each steps, each tasks, friendly to data scientist for debugging
 ```markdown
-pipeline.tasks_name
->>> [['sum_each_col'], ['sum_series']]
-```
-
-```markdown
-pipeline.get_pipeline_snapshot_res(1,0)
+pipeline.get_pipeline_snapshot_res(step_id=1,tasks_id=0)
 >>> array([197.70351007])
 ```
 
