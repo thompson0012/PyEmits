@@ -24,9 +24,12 @@ Data scientist's work consists of:
 - cleansing
 - anomaly detection
 - descriptive data analysis/exploratory data analysis
+- data ETL pipeline scripts
 
 each new business unit shall build the following wheels again and again
 
+
+# Background
 1. data pipeline
     1. extraction
     2. transformation
@@ -52,6 +55,10 @@ single simple api? That's why I create this project, also for fun. haha
 
 This project is under active development, free to use (Apache 2.0)
 I am happy to see anyone can contribute for more advancement on features
+
+
+# New feature:
+[data etl pipeline](#data-etl-pipeline)
 
 # Development Progress
 
@@ -197,7 +204,8 @@ pip install pyemits
 >
 > easily integrate to SaaS product for product proof of concept
 
-1. Easy training
+
+# Easy training
 
 ```python
 import numpy as np
@@ -213,7 +221,7 @@ trainer.fit()
 
 ```
 
-2. Accept neural network as model
+# Accept neural network as model
 
 ```python
 import numpy as np
@@ -293,7 +301,7 @@ trainer.fit()
 
 PyTorch, MXNet under development you can leave me a message if you want to contribute
 
-3. MultiOutput training
+# MultiOutput training
 
 ```python
 import numpy as np
@@ -314,9 +322,9 @@ trainer = MultiOutputRegTrainer(['XGBoost'], [None], raw_data_model)
 trainer.fit()
 ```
 
-4. Parallel training
-    - provide fast training using parallel job
-    - use RegTrainer as base, but add Parallel running
+# Parallel training
+- provide fast training using parallel job
+- use RegTrainer as base, but add Parallel running
 
 ```python
 import numpy as np
@@ -346,8 +354,8 @@ trainer = RegTrainer(['XGBoost', 'LightGBM'], [None, None], raw_data_model)
 trainer.fit()
 ```
 
-5. KFold training
-    - KFoldConfig is global config, will apply to all
+# KFold training
+- KFoldConfig is global config, will apply to all
 
 ```python
 import numpy as np
@@ -364,7 +372,7 @@ trainer = KFoldCVTrainer(['XGBoost', 'LightGBM'], [None, None], raw_data_model,
 trainer.fit()
 ```
 
-6. Easy prediction
+# Easy prediction
 
 ```python
 import numpy as np
@@ -383,9 +391,10 @@ predictor.predict(RegressionDataModel(X))
 
 ```
 
-7. Forecast at scale
+# Forecast at scale
     - see examples: [forecast at scale.ipynb](./examples/forecast%20at%20scale.ipynb)
-8. Data Model
+
+#Data Model
 
 ```python
 from pyemits.common.data_model import RegressionDataModel
@@ -396,7 +405,7 @@ y = np.random.randint(1, 100, size=(1000, 1))
 
 data_model = RegressionDataModel(X, y)
 
-data_model._update_variable('X_shape', (1000, 10, 10))
+data_model._update_attributes('X_shape', (1000, 10, 10))
 data_model.X_shape
 
 data_model.add_meta_data('X_shape', (1000, 10, 10))
@@ -404,7 +413,7 @@ data_model.meta_data
 
 ```
 
-9. Anomaly detection (partial finished)
+# Anomaly detection (partial finished)
     - see: [anomaly detection](./examples/anomaly%20detector.ipynb)
     - root cause analyzer (under development)
     - Kalman filter (under development)
@@ -447,12 +456,58 @@ predictor = AnomalyPredictor(trainer.clf_models,
 predictor.predict(AnomalyDataModel(X_test))
 
 ```
+# data ETL pipeline
+```python
+from pyemits.core.preprocessing import DataNode, NumpyDataNode, PandasDataFrameDataNode, PandasSeriesDataNode, Task, Step, Pipeline
+import pandas as pd
+import numpy as np 
 
-10. Evaluation (under development)
-    - see module: [evaluation](pyemits/core/evaluation)
-    - backtesting
-    - model evaluation
-11. Ensemble (under development)
+df = pd.DataFrame(np.random.random(size=(20,20)))
+
+dn = PandasDataFrameDataNode.from_pandas(df)
+
+def sum_each_col(data, a=1, b=2):
+    
+    return data.sum()
+
+def sum_series(data):
+    return np.array([data.sum()])
+
+task_a = Task(sum_each_col)
+task_a.register_args(a=10,b=10)
+task_b = Task(sum_series)
+
+pipeline = Pipeline()
+
+step_a = Step('step_a',[task_a],'')
+step_b = Step('step_b',[task_b],'')
+
+pipeline.register_step(step_a)
+pipeline.register_step(step_b)
+pipeline.execute(dn)
+```
+
+```markdown
+pipeline.get_step_task_mapping()
+>>> {0: ('test', ['sum_each_col']), 1: ('test1', ['sum_series'])}
+```
+
+```markdown
+pipeline.tasks_name
+>>> [['sum_each_col'], ['sum_series']]
+```
+
+```markdown
+pipeline.get_pipeline_snapshot_res(1,0)
+>>> array([197.70351007])
+```
+
+# Evaluation (under development)
+- see module: [evaluation](pyemits/core/evaluation)
+- backtesting
+- model evaluation
+
+#Ensemble (under development)
     - blending
     - stacking
     - voting
@@ -462,16 +517,21 @@ predictor.predict(AnomalyDataModel(X_test))
         - average
         - median
         - maximization
-12. IO
-    - db connection
-    - local
-13. dashboard ???
-14. other miscellaneous feature
-    - continuous evaluation
-    - aggregation
-    - dimensional reduction
-    - data profile (intensive data overview)
-15. to be confirmed
+# IO
+- db connection
+- local
+
+
+# dashboard ???
+
+# other miscellaneous feature
+- continuous evaluation
+- aggregation
+- dimensional reduction
+- data profile (intensive data overview)
+
+# to be confirmed
+....
 
 # References
 
