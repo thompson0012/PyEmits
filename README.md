@@ -409,12 +409,20 @@ y = np.random.randint(1, 100, size=(1000, 1))
 
 data_model = RegressionDataModel(X, y)
 
+```
+
+directly write an attribute to the data model
+```python
 data_model._update_attributes('X_shape', (1000, 10, 10))
 data_model.X_shape
+>>> (1000,10,10)
+```
 
-data_model.add_meta_data('X_shape', (1000, 10, 10))
+write something to the meta data
+```python
+data_model.add_meta_data('dimension', (1000, 10, 10))
 data_model.meta_data
-
+>>> {'dimension': (1000,10,10)}
 ```
 
 # Anomaly detection (partial finished)
@@ -463,11 +471,15 @@ predictor.predict(AnomalyDataModel(X_test))
 
 # Data processing pipeline
 
-easy configuration, register steps and tasks in whole pipeline
+it features in the following:
+- easy configuration
+    - register steps, tasks in data processing pipeline
+- log data result in each tasks, each steps
+- record the flow of pipeline, from steps to work (from marco to micro)
 
-only for data processing
-only for data processing
-only for data processing
+you can embed other function features in the task, but parameter: "data" is required to be passed in
+
+e.g. add email notification, add log, upload to database etc...
 
 ```python
 
