@@ -460,9 +460,13 @@ predictor.predict(AnomalyDataModel(X_test))
 
 ```
 
-# Data ETL pipeline
+# Data processing pipeline
 
 easy configuration, register steps and tasks in whole pipeline
+
+only for data processing
+only for data processing
+only for data processing
 
 ```python
 
@@ -488,14 +492,14 @@ def sum_series(data):
 ```
 
 task registration and arguments registration
-```markdown
+```python
 task_a = Task(sum_each_col)
 task_a.register_args(a=10,b=10)
 task_b = Task(sum_series)
 ```
 
 pipeline register step and execute
-```markdown
+```python
 pipeline = Pipeline()
 
 step_a = Step('step_a',[task_a],'')
@@ -507,7 +511,7 @@ pipeline.execute(dn)
 ```
 
 know the steps and its tasks from start to end
-```markdown
+```python
 pipeline.get_step_task_mapping()
 >>> {0: ('test', ['sum_each_col']), 1: ('test1', ['sum_series'])}
 ```
