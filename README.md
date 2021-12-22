@@ -23,17 +23,17 @@ Data scientist's work consists of:
 
 - forecasting
 - prediction/simulation
-- data prepration
+- data preparation
 - cleansing
 - anomaly detection
-- descriptive data analysis/exploratory data analysis
-- data ETL pipeline scripts
+- descriptive data analysis/exploratory data analysis/data profile
+- data processing and ETL pipeline scripts
 
 each new business unit shall build the following wheels again and again
 
 
-## if you are facing these problems, Pyemits is fit to you
-1. data pipeline
+## if you are facing these problems, then Pyemits is fit for you
+1. data processing and ETL pipeline
     1. extraction
     2. transformation
         1. cleansing
@@ -47,21 +47,22 @@ each new business unit shall build the following wheels again and again
     3. kfold validation
     4. anomaly detection
     5. forecasting
-    6. deep learning model in easy way
+    6. develop deep learning model (regression)
     7. ensemble modelling
 3. exploratory data analysis
     1. descriptive data analysis
-    2. ...
+    2. data profile
+    3. data set comparison
 
-data scientist need to write different code to develop their model is there any a package integrate all ml lib with
-single simple api? That's why I create this project, also for fun. haha
+data scientist need to write different code to develop their model is there a package integrate all ml lib with
+single simple api? That's why I create this project.
 
 This project is under active development, free to use (Apache 2.0)
 I am happy to see anyone can contribute for more advancement on features
 
 
 # New feature:
-[data etl pipeline](#data-etl-pipeline)
+[data processing pipeline](#data-processing-pipeline)
 
 # Development Progress
 
@@ -417,9 +418,9 @@ data_model.meta_data
 ```
 
 # Anomaly detection (partial finished)
-    - see: [anomaly detection](./examples/anomaly%20detector.ipynb)
-    - root cause analyzer (under development)
-    - Kalman filter (under development)
+- see: [anomaly detection](./examples/anomaly%20detector.ipynb)
+- root cause analyzer (under development)
+- Kalman filter (under development)
 
 ```python
 from pyemits.core.ml.anomaly_detection.predictor import AnomalyPredictor
@@ -470,11 +471,7 @@ only for data processing
 
 ```python
 
-from pyemits.core.preprocessing.pipeline import DataNode, NumpyDataNode, PandasDataFrameDataNode, PandasSeriesDataNode,
-
-Pipeline
-Step
-Task
+from pyemits.core.preprocessing.pipeline import DataNode, NumpyDataNode, PandasDataFrameDataNode, PandasSeriesDataNode, Pipeline, Step, Task
 import pandas as pd
 import numpy as np
 
