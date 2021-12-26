@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Callable, List, Iterable
+from typing import Callable, List, Iterable, Dict
 
 import numpy as np
 import pandas as pd
@@ -52,15 +52,33 @@ class DataNode:
         pass
 
 
-def infer_DataNode_type(data):
-    if type(data) == pd.DataFrame:
-        return PandasDataFrameDataNode(data)
-    elif type(data) == pd.Series:
-        return PandasSeriesDataNode(data)
-    elif type(data) == np.ndarray:
-        return NumpyDataNode(data)
+class DataNodeInferringEngine:
+    def __init__(self, data_node_mapper=None):
+        self._init_data_node_mapper(data_node_mapper)
 
-    raise TypeError('not supported data type')
+    def _init_data_node_mapper(self, data_node_mapper):
+        if not data_node_mapper:
+            self._mapper = dict(zip([np.ndarray, pd.DataFrame, pd.Series],
+                                    [NumpyDataNode, PandasDataFrameDataNode, PandasSeriesDataNode]))
+        else:
+            self._mapper = data_node_mapper
+
+        return
+
+    def infer(self, data):
+        data_type = type(data)
+        try:
+            return self._mapper[data_type](data)
+        except KeyError:
+            raise KeyError('the input data type is not exist in the data node mapper')
+
+
+def infer_DataNode_type(data, engine: DataNodeInferringEngine = None):
+    if not engine:
+        engine = DataNodeInferringEngine()
+
+    raise_if_incorrect_type(engine, DataNodeInferringEngine)
+    return engine.infer(data)
 
 
 class NumpyDataNode(DataNode):
@@ -216,9 +234,10 @@ class Pipeline:
                 StepsC[TaskCA]]
     """
 
-    def __init__(self):
+    def __init__(self, data_node_inferring_engine=None):
         self._pipeline_steps = SliceableDeque()
         self._pipeline_snapshot_res = []
+        self._data_node_inferring_engine = data_node_inferring_engine
 
     @property
     def steps_name(self):
@@ -270,7 +289,7 @@ class Pipeline:
             tmp_res = []
             for ii, task in enumerate(step.tasks):
                 res = task.execute(res)
-                res = infer_DataNode_type(res)
+                res = infer_DataNode_type(res, self._data_node_inferring_engine)
                 tmp_res.append(res)
             self._pipeline_snapshot_res.append(tmp_res)
         return res
