@@ -25,6 +25,19 @@ def _raise_if_value_not_equal(input_, expected):
 
 
 class DataNode:
+    """
+    the base of data node
+    data node work as the default constructor
+    help to create defined/desired meta data to fit users purpose on their domain
+
+    you are required to rewrite the method: ['_add_data_according2type', 'check_input_data_type'] for inherit
+
+    Parameters
+    ----------
+    data: Any
+        raw input data source
+    """
+
     def __init__(self, data):
         self._data = data
         self._meta_data_model = MetaDataModel()
@@ -232,6 +245,11 @@ class Pipeline:
     Pipeline = [StepsA[TaskAA, TaskAB, TaskAC],
                 StepsB[TaskBA, TaskBB],
                 StepsC[TaskCA]]
+
+    you are required to pass the DataNodeInferringEngine unless your data is using [pd.DataFrame, np.ndarray, pd.Series]
+    DataNodeInferringEngine allow you to do customization of mapping in terms of data type,
+    it will empower Pipeline to handle the data output in each tasks, steps
+    then meta data can be created in each task, steps
     """
 
     def __init__(self, data_node_inferring_engine=None):
@@ -267,7 +285,7 @@ class Pipeline:
         del self._pipeline_steps[location_id]
         return
 
-    def insert_step(self, location_id: int, step):
+    def insert_step(self, location_id: int, step: Step):
         self._pipeline_steps.insert(location_id, step)
         return
 
