@@ -63,12 +63,9 @@ class DBConnectionBase:
         from collections import defaultdict
         schema_containers = defaultdict(dict)
         for schema in schemas:
-            print("schema: %s" % schema)
+            # print("schema: %s" % schema)
             for table_name in inspector.get_table_names(schema=schema):
-                print(table_name)
-                schema_containers[schema][table_name] = []
-                for column in inspector.get_columns(table_name, schema=schema):
-                    schema_containers[schema][table_name].append(column)
+                schema_containers[schema][table_name] = inspector.get_columns(table_name, schema=schema)
 
         return schema_containers
 
