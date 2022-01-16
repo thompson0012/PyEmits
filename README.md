@@ -1,6 +1,7 @@
 ![Project Icon](./assets/icon.png)
 
 # What is Pyemits
+
 PyEmits, a python package for easy manipulation in time-series data.
 
 The ultimate goal:
@@ -11,8 +12,8 @@ The ultimate goal:
 
 > Uniform API for machine learning and deep learning
 
-
 # Why need Pyemits?
+
 Time-series data is very common in real life.
 
 - Engineering
@@ -31,8 +32,8 @@ Data scientist's work consists of:
 
 each new business unit shall build the following wheels again and again
 
-
 ## if you are facing these problems, then Pyemits is fit for you
+
 1. data processing and ETL pipeline
     1. extraction
     2. transformation
@@ -54,14 +55,14 @@ each new business unit shall build the following wheels again and again
     2. data profile
     3. data set comparison
 
-data scientist need to write different code to develop their model is there a package integrate all ml lib with
-single simple api? That's why I create this project.
+data scientist need to write different code to develop their model is there a package integrate all ml lib with single
+simple api? That's why I create this project.
 
 This project is under active development, free to use (Apache 2.0)
 I am happy to see anyone can contribute for more advancement on features
 
-
 # New feature:
+
 [data processing pipeline](#data-processing-pipeline)
 
 [db connection and manipulation](#io)
@@ -210,7 +211,6 @@ pip install pyemits
 >
 > easily integrate to SaaS product for product proof of concept
 
-
 # Easy training
 
 ```python
@@ -329,6 +329,7 @@ trainer.fit()
 ```
 
 # Parallel training
+
 - provide fast training using parallel job
 - use RegTrainer as base, but add Parallel running
 
@@ -361,6 +362,7 @@ trainer.fit()
 ```
 
 # KFold training
+
 - KFoldConfig is global config, will apply to all
 
 ```python
@@ -398,6 +400,7 @@ predictor.predict(RegressionDataModel(X))
 ```
 
 # Forecast at scale
+
 - see examples: [forecast at scale.ipynb](./examples/forecast%20at%20scale.ipynb)
 
 # Data Model
@@ -414,20 +417,23 @@ data_model = RegressionDataModel(X, y)
 ```
 
 directly write an attribute to the data model
+
 ```python
 data_model._update_attributes('X_shape', (1000, 10, 10))
 data_model.X_shape
->>> (1000,10,10)
+>> > (1000, 10, 10)
 ```
 
 write something to the meta data
+
 ```python
 data_model.add_meta_data('dimension', (1000, 10, 10))
 data_model.meta_data
->>> {'dimension': (1000,10,10)}
+>> > {'dimension': (1000, 10, 10)}
 ```
 
 # Anomaly detection (partial finished)
+
 - see: [anomaly detection](./examples/anomaly%20detector.ipynb)
 - root cause analyzer (under development)
 - Kalman filter (under development)
@@ -474,6 +480,7 @@ predictor.predict(AnomalyDataModel(X_test))
 # Data processing pipeline
 
 it features in the following:
+
 - easy configuration
     - register steps, tasks in data processing pipeline
 - log data result in each tasks, each steps
@@ -485,7 +492,9 @@ e.g. add email notification, add log, upload to database etc...
 
 ```python
 
-from pyemits.core.preprocessing.pipeline import DataNode, NumpyDataNode, PandasDataFrameDataNode, PandasSeriesDataNode, Pipeline, Step, Task
+from pyemits.core.preprocessing.pipeline import DataNode, NumpyDataNode, PandasDataFrameDataNode, PandasSeriesDataNode,
+
+Pipeline, Step, Task
 import pandas as pd
 import numpy as np
 
@@ -503,18 +512,20 @@ def sum_series(data):
 ```
 
 task registration and arguments registration
+
 ```python
 task_a = Task(sum_each_col)
-task_a.register_args(a=10,b=10)
+task_a.register_args(a=10, b=10)
 task_b = Task(sum_series)
 ```
 
 pipeline register step and execute
+
 ```python
 pipeline = Pipeline()
 
-step_a = Step('step_a',[task_a],'')
-step_b = Step('step_b',[task_b],'')
+step_a = Step('step_a', [task_a], '')
+step_b = Step('step_b', [task_b], '')
 
 pipeline.register_step(step_a)
 pipeline.register_step(step_b)
@@ -522,23 +533,27 @@ pipeline.execute(dn)
 ```
 
 know the steps and its tasks from start to end
+
 ```python
 pipeline.get_step_task_mapping()
->>> {0: ('test', ['sum_each_col']), 1: ('test1', ['sum_series'])}
+>> > {0: ('test', ['sum_each_col']), 1: ('test1', ['sum_series'])}
 ```
 
 know the snapshot result in each steps, each tasks, friendly to data scientist for debugging
+
 ```markdown
 pipeline.get_pipeline_snapshot_res(step_id=1,tasks_id=0)
->>> array([197.70351007])
+> > > array([197.70351007])
 ```
 
 # Evaluation (under development)
+
 - see module: [evaluation](pyemits/core/evaluation)
 - backtesting
 - model evaluation
 
 # Ensemble (under development)
+
 - blending
 - stacking
 - voting
@@ -550,51 +565,57 @@ pipeline.get_pipeline_snapshot_res(step_id=1,tasks_id=0)
     - maximization
 
 # IO
+
 - db connection and manipulation
+
 ```python
 from pyemits.common.io.db import DBConnectionBase
+
 db = DBConnectionBase.from_full_db_path('sqlite:///test.db')
 
 db.execute('CREATE TABLE abcc(c1 int, c2 int, c3 int)')
 
 db.execute('INSERT INTO abcc(c1, c2, c3) VALUES (10, 10, 10)', always_commit=True)
 
-db.execute('SELECT * FROM abcc',fetch=10)
-db.execute('SELECT * FROM abcc',fetch='all')
+db.execute('SELECT * FROM abcc', fetch=10)
+db.execute('SELECT * FROM abcc', fetch='all')
 
 schemas = db.get_schemas()
-schemas['main']['abcc']
->>> [{'name': 'c1',
-  'type': INTEGER(),
-  'nullable': True,
-  'default': None,
-  'autoincrement': 'auto',
-  'primary_key': 0},
- {'name': 'c2',
-  'type': INTEGER(),
-  'nullable': True,
-  'default': None,
-  'autoincrement': 'auto',
-  'primary_key': 0},
- {'name': 'c3',
-  'type': INTEGER(),
-  'nullable': True,
-  'default': None,
-  'autoincrement': 'auto',
-  'primary_key': 0}]
-```
-- local
 
+schemas['main']['abcc']
+>> [{'name': 'c1',
+     'type': INTEGER(),
+     'nullable': True,
+     'default': None,
+     'autoincrement': 'auto',
+     'primary_key': 0},
+    {'name': 'c2',
+     'type': INTEGER(),
+     'nullable': True,
+     'default': None,
+     'autoincrement': 'auto',
+     'primary_key': 0},
+    {'name': 'c3',
+     'type': INTEGER(),
+     'nullable': True,
+     'default': None,
+     'autoincrement': 'auto',
+     'primary_key': 0}]
+```
+
+- local
 
 # dashboard ???
 
 # other miscellaneous feature
+
 - continuous evaluation
 - aggregation
 - dimensional reduction
 - data profile (intensive data overview)
 
 # to be confirmed
+
 ....
 
 # References
