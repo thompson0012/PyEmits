@@ -64,6 +64,8 @@ I am happy to see anyone can contribute for more advancement on features
 # New feature:
 [data processing pipeline](#data-processing-pipeline)
 
+[db connection and manipulation](#io)
+
 # Development Progress
 
 <table>
@@ -548,7 +550,39 @@ pipeline.get_pipeline_snapshot_res(step_id=1,tasks_id=0)
     - maximization
 
 # IO
-- db connection
+- db connection and manipulation
+```python
+from pyemits.common.io.db import DBConnectionBase
+db = DBConnectionBase.from_full_db_path('sqlite:///test.db')
+
+db.execute('CREATE TABLE abcc(c1 int, c2 int, c3 int)')
+
+db.execute('INSERT INTO abcc(c1, c2, c3) VALUES (10, 10, 10)', always_commit=True)
+
+db.execute('SELECT * FROM abcc',fetch=10)
+db.execute('SELECT * FROM abcc',fetch='all')
+
+schemas = db.get_schemas()
+schemas['main']['abcc']
+>>> [{'name': 'c1',
+  'type': INTEGER(),
+  'nullable': True,
+  'default': None,
+  'autoincrement': 'auto',
+  'primary_key': 0},
+ {'name': 'c2',
+  'type': INTEGER(),
+  'nullable': True,
+  'default': None,
+  'autoincrement': 'auto',
+  'primary_key': 0},
+ {'name': 'c3',
+  'type': INTEGER(),
+  'nullable': True,
+  'default': None,
+  'autoincrement': 'auto',
+  'primary_key': 0}]
+```
 - local
 
 
