@@ -73,7 +73,7 @@ class DBConnectionBase:
         return inspector.get_table_names()
 
 
-def _get_schemas(inspector, schema_containers, schemas: Union[str, List[str]], tables: Union[str, List[List[str]]]):
+def _get_schemas(inspector, schema_containers, schemas: Union[str, List[str]], tables: Union[str, List[List[str]], List[str]]):
     schema_list = _validate_schema_names(inspector, schemas)
     if check_all_element_type_uniform(tables, list):
         for schema, table in zip(schema_list, tables):
