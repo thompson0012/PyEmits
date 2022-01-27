@@ -27,7 +27,7 @@ class DBConnectionBase:
 
     @classmethod
     def from_full_db_path(cls, full_db_path, echo=True):
-        engine = create_engine(f"{full_db_path}", echo=True)
+        engine = create_engine(f"{full_db_path}", echo=echo)
         return cls(engine)
 
     def get_db_engine(self):
