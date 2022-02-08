@@ -59,13 +59,13 @@ def raise_if_not_dataclass(obj):
     return True
 
 
-def raise_if_not_all_type_uniform(iterable_sequences: Union[tuple, list], expect_type=None):
-    if not check_all_type_uniform(iterable_sequences, expect_type):
+def raise_if_not_all_element_type_uniform(iterable_sequences: Union[tuple, list], expect_type=None):
+    if not check_all_element_type_uniform(iterable_sequences, expect_type):
         raise TypeError('elements type not the same')
     return True
 
 
-def check_all_type_uniform(iterable_sequences: Union[tuple, list], expect_type=None):
+def check_all_element_type_uniform(iterable_sequences: Union[tuple, list], expect_type=None):
     if not expect_type:
         first_type = type(iterable_sequences[0])
         expect_type = first_type

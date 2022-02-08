@@ -36,6 +36,7 @@ keras = "^2.6.0"
 tensorflow = "^2.6.0"
 filterpy = "^1.4.5"
 pykalman = "^0.9.5"
+SQLAlchemy = "^1.4.29"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
