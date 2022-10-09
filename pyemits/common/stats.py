@@ -18,9 +18,16 @@ from sklearn.metrics import r2_score, mean_absolute_error, mean_absolute_percent
     mean_squared_log_error
 
 from pyemits.common.validation import raise_if_incorrect_type, raise_if_value_not_contains
+from abc import ABC
 
 
-class NumericalStats(Enum):
+class StatsEnum(Enum):
+    @classmethod
+    def available_list(cls):
+        return NotImplementedError
+
+
+class NumericalStats(StatsEnum):
     @classmethod
     def available_list(cls):
         available_list = [attr for attr, obj in vars(NumericalStats).items() if isinstance(obj, classmethod)]
@@ -143,6 +150,14 @@ class NumericalStats(Enum):
     def histogram(cls, series, bins, density=True):
         counts, edges = np.histogram(series, bins, density=density)
         return counts, edges
+
+    @classmethod
+    def unique(cls, series):
+        return np.unique(series, return_counts=True)
+
+    @classmethod
+    def distinct_counts(cls, series):
+        return len(cls.unique(series)[1])
 
 
 class RegressionMetrics(Enum):
