@@ -567,6 +567,7 @@ pipeline.get_pipeline_snapshot_res(step_id=1,tasks_id=0)
 # IO
 
 - db connection and manipulation
+- it is developed by another package named: PyConn, will release in future
 
 ```python
 from pyemits.common.io.db import DBConnectionBase
